@@ -2,6 +2,7 @@
 
 namespace App\Models\Setting;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Departments extends Model
@@ -11,4 +12,8 @@ class Departments extends Model
         'faculty',
     ];
     public $timestamps = false;
+
+    public function user(){
+        return $this->hasMany(User::class);
+    }
 }

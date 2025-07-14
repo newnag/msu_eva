@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\RateLimiter;
@@ -49,7 +49,19 @@ class AuthController extends Controller
 
         Auth::login($user);
         $request->session()->regenerate(); // prevent session fixation
-        return redirect()->intended('/users');
+
+        // กำหนด path redirect ตาม role (ส่งกลับไปให้ JS ใช้ window.location.href = response.data.redirect)
+        $redirect = '/';
+        if ($user->hasRole('admin')) {
+            $redirect = '/dashboard';
+        } elseif ($user->hasRole('ผู้บริหาร')) {
+            $redirect = '/dashboard';
+        } elseif ($user->hasRole('ผู้ประเมิน')) {
+            $redirect = '/evaluator-dashboard';
+        } elseif ($user->hasRole('ผู้รับการประเมิน')) {
+            $redirect = '/evaluatee-dashboard';
+        }
+        return response()->json(['redirect' => $redirect]);
     }
 
     public function logout(Request $request)
