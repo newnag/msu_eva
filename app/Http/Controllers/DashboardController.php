@@ -156,7 +156,8 @@ class DashboardController extends Controller
                     'quality_scores.score',
                     'quality_sub_criterias.num_score',
                     'quality_main_criterias.ratio',
-                    'reports.id'
+                    'evaluation_lists.sum_score',
+                    'reports.id'      
                 )
                 ->get();
 
@@ -272,7 +273,8 @@ class DashboardController extends Controller
                     'quality_scores.score',
                     'quality_sub_criterias.num_score',
                     'quality_main_criterias.ratio',
-                    'reports.id'
+                    'reports.id',
+                    'evaluation_lists.sum_score'
                 )
                 ->get();
 
@@ -351,7 +353,7 @@ class DashboardController extends Controller
                     'quality_sub_criterias.num_score',
                     'quality_main_criterias.id as quality_main_criteria_id',
                     'quality_main_criterias.ratio',
-                    'evaluation_lists.sum_score',
+                    'evaluation_lists.sum_score as sum_score',
                     'reports.id as report_id'
                 )
                 ->where('quality_scores.report_id', $report->report_id)
@@ -362,7 +364,8 @@ class DashboardController extends Controller
                     'quality_scores.score',
                     'quality_sub_criterias.num_score',
                     'quality_main_criterias.ratio',
-                    'reports.id'
+                    'reports.id',
+                    'evaluation_lists.sum_score'
                 )
                 ->get();
 
