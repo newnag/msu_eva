@@ -32,7 +32,7 @@ class ReportController extends Controller
     public function show($id)
     {
         try {
-            $report = Report::with(['assignments', 'quantityScores', 'qualityScores', 'evidenceAnswers'])->findOrFail($id);
+            $report = Reports::with(['assignments', 'quantityScores', 'qualityScores', 'evidenceAnswers'])->findOrFail($id);
 
             return new ReportResource($report);
         } catch (ModelNotFoundException $e) {
@@ -116,7 +116,7 @@ class ReportController extends Controller
     /**
      * ตรวจสอบว่า report อยู่ในสถานะที่สามารถแก้ไขได้หรือไม่
      */
-    protected function checkReportEditableStatus(Report $report, $action)
+    protected function checkReportEditableStatus(Reports $report, $action)
     {
         if (! in_array($report->status, $this->allowedEditStatuses)) {
             return response()->json([

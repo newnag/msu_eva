@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\AssignmentData;
+use App\Models\Assignments;
+use App\Models\Category;
 use App\Models\Department;
 use App\Models\QuantityScore;
 use App\Models\Reports;
 use App\Models\User;
-use App\Models\Assignments;
-use App\Models\Category;
-use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -58,7 +58,8 @@ class DashboardController extends Controller
                 'reports.status as report_status',
                 'reports.created_at as report_created_at',
                 'reports.updated_at as report_updated_at',
-                'reports.report_data_id as report_data_id'
+                'reports.report_data_id as report_data_id',
+                'reports.comment as comment'
             )->orderBy('reports.updated_at', 'desc');
 
         // Apply date filters if provided
@@ -354,8 +355,9 @@ class DashboardController extends Controller
                     'quality_sub_criterias.num_score',
                     'quality_main_criterias.id as quality_main_criteria_id',
                     'quality_main_criterias.ratio',
-                    'evaluation_lists.sum_score as sum_score',
-                    'reports.id as report_id'
+                    'evaluation_lists.sum_score',
+                    'reports.id as report_id',
+                    'reports.comment as comment',
                 )
                 ->where('quality_scores.report_id', $report->report_id)
                 ->groupBy(
@@ -430,6 +432,7 @@ class DashboardController extends Controller
                 'quantity_score' => round($quantityScore, 2),
                 'quality_score' => round($qualityScore, 2),
                 'score' => round($quantityScore + $qualityScore, 2),
+                'comment' => $report->comment ?? null,
             ];
         }
 
