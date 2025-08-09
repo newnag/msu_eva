@@ -1,7 +1,9 @@
 @import 'tailwindcss';
-@tailwind base;
-@tailwind components;
 @tailwind utilities;
+
+* {
+    font-family: 'Kanit', sans-serif;
+}
 
 @import 'tw-animate-css';
 
@@ -169,9 +171,9 @@
     }
 }
 
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
-@tailwind utilities;
+@tailwind utilities; */
 
 @layer components {
     .form-input-custom {
