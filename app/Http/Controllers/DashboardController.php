@@ -26,13 +26,6 @@ class DashboardController extends Controller
         // Fetch all departments for the filter dropdown
         $departments = Department::all();
 
-        // If no filters are provided, don't set default dates to ensure all data is fetched
-        // $latestPeriod = AssignmentData::latest('end_time')->first();
-        // if (!$startDate && !$endDate && $latestPeriod) {
-        //     $startDate = $latestPeriod->start_time;
-        //     $endDate = $latestPeriod->end_time;
-        // }
-
         // Base query for reports
         $reportsQuery = Reports::query()
             ->join('assignments', 'reports.id', '=', 'assignments.report_id')
@@ -96,28 +89,14 @@ class DashboardController extends Controller
         $evaluationPeriod = $this->getEvaluationPeriod($startDate, $endDate);
 
         return view('dashboard.index', [
-            // 'reports' => $groupedMainCriterias,
-
             'totalParticipants' => $totalParticipants,
             'averageScore' => $averageScore,
             'departments' => $departments,
             'statusCounts_chart' => $statusCounts,
             'scatterData_chart' => $scatterData,
-            // 'reports' => $reportsQuery->get(),
             'reports' => $reportsWithScores,
             'evaluationPeriod' => $evaluationPeriod,
         ]);
-
-        // return response()->json([
-        //     'totalParticipants' => $totalParticipants,
-        //     'averageScore' => $averageScore,
-        //     'departments' => $departments,
-        //     'statusCounts_chart' => $statusCounts,
-        //     'scatterData_chart' => $scatterData,
-        //     // 'reports' => $reportsQuery->get(),
-        //     'reports' => $reportsWithScores,
-        //     'evaluationPeriod' => $evaluationPeriod,
-        // ]);
     }
 
     private function calculateAverageScore($reports)
@@ -582,7 +561,6 @@ class DashboardController extends Controller
             ];
         });
 
-        //  โหลด Categories พร้อม EvaluationLists และ SubCriterias + MainCriteria
         $categories = Category::with([
             'evaluationLists' => function ($query) {
                 $query->orderBy('sequence')->with([

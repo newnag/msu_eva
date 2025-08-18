@@ -18,10 +18,7 @@ use Illuminate\Validation\ValidationException;
 
 class ReportController extends Controller
 {
-    // สถานะที่อนุญาตให้แก้ไขข้อมูล
     protected $allowedEditStatuses = ['ASSIGNED', 'DRAFT'];
-
-    // GET /reports
     public function index()
     {
         $reports = Reports::all();
@@ -32,7 +29,7 @@ class ReportController extends Controller
     public function show($id)
     {
         try {
-            $report = Reports::with(['assignments','quantityScores', 'qualityScores', 'evidenceAnswers'])->findOrFail($id);
+            $report = Reports::with(['assignments', 'quantityScores', 'qualityScores', 'evidenceAnswers'])->findOrFail($id);
             return new ReportResource($report);
         } catch (ModelNotFoundException $e) {
             return response()->json(['message' => 'Report not found'], 404);
@@ -67,7 +64,6 @@ class ReportController extends Controller
         }
     }
 
-    // PUT /reports/{id}
     public function update(Request $request, $id)
     {
         try {
@@ -99,7 +95,6 @@ class ReportController extends Controller
         }
     }
 
-    // DELETE /reports/{id}
     public function destroy($id)
     {
         try {
@@ -112,9 +107,6 @@ class ReportController extends Controller
         }
     }
 
-    /**
-     * ตรวจสอบว่า report อยู่ในสถานะที่สามารถแก้ไขได้หรือไม่
-     */
     protected function checkReportEditableStatus(Reports $report, $action)
     {
         if (! in_array($report->status, $this->allowedEditStatuses)) {
@@ -123,16 +115,13 @@ class ReportController extends Controller
             ], 403);
         }
 
-        return null; // ถ้าผ่านการตรวจสอบ
+        return null;
     }
 
-    // POST /reports/{reportId}/quantity-scores
     public function addQuantityScores(Request $request, $reportId)
     {
         try {
             $report = Reports::findOrFail($reportId);
-
-            // ตรวจสอบสถานะ report
             $statusCheck = $this->checkReportEditableStatus($report, 'add Quantity score');
             if ($statusCheck) {
                 return $statusCheck;
@@ -149,8 +138,6 @@ class ReportController extends Controller
             foreach ($validated['quantity_list'] as $item) {
                 $subCriteria = \App\Models\QuantitySubCriteria::find($item['quantity_sub_criteria_id']);
                 $scoreC = $item['score_C'] ?? null;
-
-                // Calculate score_D using the formula
                 $scoreD = null;
                 if ($scoreC !== null && $subCriteria && $subCriteria->score_b != 0) {
                     $scoreD = ($subCriteria->score_a * $scoreC) / $subCriteria->score_b;
@@ -176,8 +163,6 @@ class ReportController extends Controller
     {
         try {
             $report = Reports::findOrFail($reportId);
-
-            // ตรวจสอบสถานะ report
             $statusCheck = $this->checkReportEditableStatus($report, 'update quantity scores');
             if ($statusCheck) {
                 return $statusCheck;
@@ -192,7 +177,6 @@ class ReportController extends Controller
 
             $updated = [];
             foreach ($validated['quantity_list'] as $item) {
-                // อัปเดตโดยใช้ where clause ที่ระบุทั้งสองคอลัมน์ของ composite key
                 $result = DB::table('quantity_scores')
                     ->where('quantity_sub_criteria_id', $item['quantity_sub_criteria_id'])
                     ->where('report_id', $reportId)
@@ -203,7 +187,6 @@ class ReportController extends Controller
                     ]);
 
                 if ($result) {
-                    // ดึงข้อมูลที่อัปเดตแล้ว
                     $score = QuantityScore::where('quantity_sub_criteria_id', $item['quantity_sub_criteria_id'])
                         ->where('report_id', $reportId)
                         ->first();
@@ -225,13 +208,10 @@ class ReportController extends Controller
         }
     }
 
-    // POST /reports/{reportId}/quality-scores
     public function addQualityScores(Request $request, $reportId)
     {
         try {
             $report = Reports::findOrFail($reportId);
-
-            // ตรวจสอบสถานะ report
             $statusCheck = $this->checkReportEditableStatus($report, 'add Quality score');
             if ($statusCheck) {
                 return $statusCheck;
@@ -263,8 +243,6 @@ class ReportController extends Controller
     {
         try {
             $report = Reports::findOrFail($reportId);
-
-            // ตรวจสอบสถานะ report
             $statusCheck = $this->checkReportEditableStatus($report, 'update quality scores');
             if ($statusCheck) {
                 return $statusCheck;
@@ -279,7 +257,6 @@ class ReportController extends Controller
             $updated = [];
 
             foreach ($validated['quality_list'] as $item) {
-                // ตรวจสอบว่า quality score นี้เป็นของ report นี้หรือไม่ก่อนอัปเดต
                 $result = DB::table('quality_scores')
                     ->where('quality_sub_criteria_id', $item['quality_sub_criteria_id'])
                     ->where('report_id', $reportId)
@@ -289,7 +266,6 @@ class ReportController extends Controller
                     ]);
 
                 if ($result) {
-                    // ดึงข้อมูลที่อัปเดตแล้ว
                     $score = QualityScore::where('quality_sub_criteria_id', $item['quality_sub_criteria_id'])
                         ->where('report_id', $reportId)
                         ->first();
@@ -311,13 +287,10 @@ class ReportController extends Controller
         }
     }
 
-    // POST /reports/{reportId}/evidence-answers
     public function addEvidenceAnswers(Request $request, $reportId)
     {
         try {
             $report = Reports::findOrFail($reportId);
-
-            // ตรวจสอบสถานะ report
             $statusCheck = $this->checkReportEditableStatus($report, 'add Evidence answers');
             if ($statusCheck) {
                 return $statusCheck;
@@ -349,8 +322,6 @@ class ReportController extends Controller
     {
         try {
             $report = Reports::findOrFail($reportId);
-
-            // ตรวจสอบสถานะ report
             $statusCheck = $this->checkReportEditableStatus($report, 'update evidence answers');
             if ($statusCheck) {
                 return $statusCheck;
@@ -366,7 +337,6 @@ class ReportController extends Controller
             $updated = [];
 
             foreach ($validated['evidence_list'] as $item) {
-                // ตรวจสอบว่า quality score นี้เป็นของ report นี้หรือไม่ก่อนอัปเดต
                 $result = DB::table('evidence_answers')
                     ->where('evaluation_list_id', $item['evaluation_list_id'])
                     ->where('report_id', $reportId)
@@ -377,7 +347,6 @@ class ReportController extends Controller
                     ]);
 
                 if ($result) {
-                    // ดึงข้อมูลที่อัปเดตแล้ว
                     $evidenceAnswer = EvidenceAnswer::where('evaluation_list_id', $item['evaluation_list_id'])
                         ->where('report_id', $reportId)
                         ->first();

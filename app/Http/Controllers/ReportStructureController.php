@@ -40,7 +40,6 @@ class ReportStructureController extends Controller
     public function show($id)
     {
         try {
-            // ตรวจสอบว่ามีเวอร์ชัน
             $versionExists = CriteriaVersion::where('id', $id)->exists();
             if (! $versionExists) {
                 return response()->json([
@@ -98,7 +97,6 @@ class ReportStructureController extends Controller
                 ], 500);
             }
 
-            // สร้าง response ในรูปแบบที่ต้องการ
             $formattedResponse = [
                 'version_name' => $version->version_name,
                 'created_by' => $version->created_by,
@@ -112,14 +110,12 @@ class ReportStructureController extends Controller
                     ];
                 }),
                 'categories' => $version->categories->map(function ($category) {
-                    // กลุ่ม evaluation lists ตาม category
                     return [
                         'categorie_id' => $category->id,
                         'main_categories' => $category->main_categories,
                         'sub_categories' => $category->sub_categories,
                         'sequence' => $category->sequence,
                         'evaluation_lists' => $category->evaluationLists->map(function ($evalList) {
-                            // สร้าง Map ของ quantity main criterias
                             $quantityMainMap = [];
 
                             foreach ($evalList->quantitySubCriterias as $qSub) {
@@ -127,7 +123,7 @@ class ReportStructureController extends Controller
                                 $main = $qSub->mainCriteria;
 
                                 if (! $main) {
-                                    continue; // ข้ามถ้าไม่มี main criteria
+                                    continue;
                                 }
 
                                 if (! isset($quantityMainMap[$mainId])) {
@@ -148,7 +144,6 @@ class ReportStructureController extends Controller
                                 ];
                             }
 
-                            // สร้าง Map ของ quality main criterias
                             $qualityMainMap = [];
 
                             foreach ($evalList->qualitySubCriterias as $qSub) {
@@ -156,12 +151,12 @@ class ReportStructureController extends Controller
                                 $main = $qSub->mainCriteria;
 
                                 if (! $main) {
-                                    continue; // ข้ามถ้าไม่มี main criteria
+                                    continue;
                                 }
 
                                 if (! isset($qualityMainMap[$mainId])) {
                                     $qualityMainMap[$mainId] = [
-                                        'quality_main_criteria_id' => $main->id, // ใช้ $main->id ไม่ใช่ $main->name
+                                        'quality_main_criteria_id' => $main->id,
                                         'name' => $main->name,
                                         'ratio' => $main->ratio,
                                         'tooltips' => $main->tooltips,
@@ -196,7 +191,7 @@ class ReportStructureController extends Controller
                 'data' => $formattedResponse,
             ]);
         } catch (\Exception $e) {
-            Log::error('Error fetching criteria version: '.$e->getMessage());
+            Log::error('Error fetching criteria version: ' . $e->getMessage());
 
             return response()->json([
                 'message' => 'Failed to retrieve criteria version',
@@ -215,7 +210,7 @@ class ReportStructureController extends Controller
             'report_datas' => 'required|array',
             'report_datas.*.report_title' => 'required|string',
             'report_datas.*.report_description' => 'required|nullable|string',
-            'report_datas.*.assessment_type' => 'required|string', // ถ้าหากมี 2 อย่างนี้ |in:quantity,quality
+            'report_datas.*.assessment_type' => 'required|string',
             'report_datas.*.comment' => 'nullable|string',
 
             'categories' => 'required|array|min:1',
@@ -352,13 +347,12 @@ class ReportStructureController extends Controller
                     'quantityMainCriterias.quantitySubCriterias',
                     'qualityMainCriterias.qualitySubCriterias',
                     'reportDatas',
-                    // Now load evaluationLists' sub-criterias, and have each sub-criteria load its main criteria
                     'categories.evaluationLists.quantitySubCriterias.mainCriteria',
                     'categories.evaluationLists.qualitySubCriterias.mainCriteria',
                 ]),
             ], 201);
         } catch (ValidationException $e) {
-            Log::error('Validation error in store: '.json_encode($e->errors()));
+            Log::error('Validation error in store: ' . json_encode($e->errors()));
 
             return response()->json([
                 'success' => false,
@@ -366,12 +360,12 @@ class ReportStructureController extends Controller
                 'error' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
-            Log::error('Server error in store: '.$e->getMessage(), ['exception' => $e]);
+            Log::error('Server error in store: ' . $e->getMessage(), ['exception' => $e]);
             DB::rollBack();
 
             return response()->json([
                 'success' => false,
-                'message' => 'An error occurred: '.$e->getMessage(),
+                'message' => 'An error occurred: ' . $e->getMessage(),
             ], 500);
         }
     }
@@ -382,13 +376,9 @@ class ReportStructureController extends Controller
     {
         $validated = $request->validate([
             'version_name' => 'sometimes|required|string|max:255',
-            // 'created_by' => 'nullable|exists:users,user_id',
         ]);
 
-        // $authUser = Auth::guard('api')->user();
         $version = CriteriaVersion::where('id', $id)->first();
-
-        // $validated['created_by'] = $authUser->user_id;
 
         $version->update($validated);
 
@@ -407,7 +397,6 @@ class ReportStructureController extends Controller
             ->where('report_data_id', $id)->get();
 
         if ($relatedReports->count() > 0) {
-            // ถ้ามี report ไหนที่ status ไม่ใช่ Completed ห้ามลบ
             $notCompleted = $relatedReports->where('status', '!=', 'Completed');
             if ($notCompleted->count() > 0) {
                 return response()->json([

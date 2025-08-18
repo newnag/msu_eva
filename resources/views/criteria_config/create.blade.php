@@ -21,7 +21,7 @@
                     </h2>
                     <div class="space-y-6">
                         <div>
-                            <label for="version_name" class="block text-sm font-medium text-gray-700 mb-2">ชื่อรุ่น <span
+                            <label for="version_name" class="block text-sm font-medium text-gray-700 mb-2">ปีผู้ประเมิน <span
                                     class="text-red-500">*</span></label>
                             <input id="version_name" required name="version_name"
                                 class="version_name border border-gray-300 text-gray-900 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-3 transition duration-200"
@@ -215,7 +215,7 @@
 
                                 <!-- Quantity Criteria Section -->
                                 <div
-                                    class="quantity_main_criterias_container space-y-4 pl-6 border-l-4 border-green-400 hidden">
+                                    class="quantity_main_criterias_container pt-3.5 space-y-4 pl-6 border-l-4 border-green-400 hidden">
                                     <h6 class="font-bold text-gray-900 mb-3 flex items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-green-600"
                                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -345,7 +345,7 @@
                                 </div>
                                 <!-- Quality Criteria Section -->
                                 <div
-                                    class="quality_main_criterias_container space-y-4 pl-6 border-l-4 border-purple-400 hidden">
+                                    class="quality_main_criterias_container space-y-4 pt-3.5 pl-6 border-l-4 border-purple-400 hidden">
                                     <h6 class="font-bold text-gray-900 mb-3 flex items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-purple-600"
                                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
