@@ -7,6 +7,7 @@
 | Components ที่ใช้:
 | - Main button: resources/views/components/button.blade.php
 | - Header pf page: resources/views/components/header.blade.php
+| - Pagination: resources/views/components/pagination.blade.php
 |--------------------------------------------------------------------------
 --}}
 
@@ -280,8 +281,8 @@
         }
 
         /* .modal-backdrop {
-                            display: none !important;
-                        } */
+                                display: none !important;
+                            } */
 
         body {
             overflow: auto !important;
@@ -358,10 +359,8 @@
     </style>
     <div class="container-fluid">
         <!-- Page Header and Button -->
-        <x-header 
-        title="จัดการข้อมูลตำแหน่งงานในระบบ"  
-        text="ตำแหน่งงานทั้งหมด {{ $positions->total() }} ตำแหน่ง"  
-        icon="fas fa-user-tie">
+        <x-header title="จัดการข้อมูลตำแหน่งงานในระบบ" text="ตำแหน่งงานทั้งหมด {{ $positions->total() }} ตำแหน่ง"
+            icon="fas fa-user-tie">
             <x-slot name="action">
                 <x-button type="primary" buttonType="button" text="เพิ่มตำแหน่ง" onclick="openCreateModal()"
                     icon="fas fa-plus" />
@@ -381,7 +380,7 @@
                         <thead>
                             <tr class="border-b border-gray-200 bg-gray-50 drop-shadow-sm">
                                 <th class="py-3 px-6 text-center font-medium text-lg ">ลำดับ</th>
-                                <th class="py-3 pl-[300px] text-left font-medium text-lg ">ชื่อตำแหน่ง</th>
+                                <th class="py-3 px-28 text-left font-medium text-lg ">ชื่อตำแหน่ง</th>
                                 <th class="py-3 px-6 text-center font-medium text-lg">การจัดการ</th>
                             </tr>
                         </thead>
@@ -391,7 +390,7 @@
                                     <td class="py-[9px] px-6 text-center text-base md:text-lg font-normal">
                                         {{ ($positions->currentPage() - 1) * $positions->perPage() + $index + 1 }}
                                     </td>
-                                    <td class="py-[9px] pl-[300px] text-base md:text-lg font-normal mx-auto">
+                                    <td class="py-[9px] px-28 text-base md:text-lg font-normal mx-auto">
                                         {{ $position->name }}
                                     </td>
                                     <td class="py-[9px] px-6">
@@ -410,39 +409,7 @@
                     </table>
 
                     <!-- Pagination Control (Tailwind default) -->
-                    <div
-                        class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-3 border-t border-gray-200">
-                        {{-- ตัวเลือกจำนวนรายการต่อหน้า --}}
-                        <div class="flex items-center text-md text-gray-700">
-                            <span>แสดง</span>
-                            <form method="GET" class="mx-2">
-                                {{-- คงพารามิเตอร์อื่น ๆ ที่มีอยู่ ยกเว้น per_page/page --}}
-                                @foreach(request()->except(['per_page', 'page']) as $key => $val)
-                                    <input type="hidden" name="{{ $key }}" value="{{ $val }}">
-                                @endforeach
-
-                                <select name="per_page" onchange="this.form.submit()"
-                                    class="border border-gray-300 rounded-md px-2 py-1 text-md focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-500">
-                                    <option value="5" {{ request('per_page', 5) == 5 ? 'selected' : '' }}>5</option>
-                                    <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
-                                    <option value="20" {{ request('per_page') == 20 ? 'selected' : '' }}>20</option>
-                                    <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
-                                </select>
-                            </form>
-                            <span>รายการต่อหน้า</span>
-                        </div>
-
-                        {{-- ข้อมูลหน้าปัจจุบัน + ปุ่มเปลี่ยนหน้า --}}
-                        <div class="flex items-center gap-4">
-                            <span class=" text-md text-gray-700">
-                                หน้า {{ $positions->currentPage() }} จาก {{ $positions->lastPage() }}
-                            </span>
-                            <div>
-                                {{-- Tailwind default ของ Laravel และคง query string ทั้งหมด (ยกเว้น page) --}}
-                                {{ $positions->appends(request()->except('page'))->links() }}
-                            </div>
-                        </div>
-                    </div>
+                    <x-pagination :paginator="$positions" />
 
                 @else
                     <div class="text-center py-12 text-gray-600 bg-white">
