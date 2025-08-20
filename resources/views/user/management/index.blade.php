@@ -8,13 +8,6 @@
 @endphp
 
 @section('content')
-    <div class="container-fluid">
-        <x-header 
-            title="จัดการข้อมูลเจ้าหน้าที่" 
-            text="ระบบจัดการข้อมูลเจ้าหน้าที่และพนักงาน" 
-            icon="fas fa-users" />
-    </div>
-
     <div class="d-flex flex-column flex-md-row justify-between items-start md:items-center mb-4 gap-3">
         <h2 class="text-xl font-bold">รายชื่อเจ้าหน้าที่ทั้งหมด ({{ count($users) }} คน)</h2>
         <div class="d-flex gap-2 align-items-center flex-wrap">

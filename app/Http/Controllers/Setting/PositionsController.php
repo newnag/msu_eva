@@ -11,14 +11,25 @@ class PositionsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $positions = Positions::paginate(10);
+        // Number of items per page 
+        $perPage = $request->integer('per_page', 5);
+        $perPage = in_array($perPage, [5, 10, 20, 50]) ? $perPage : 5;
+
+        // Keep parameters in URL when changing pages
+        $positions = Positions::paginate($perPage)->withQueryString();
 
         return view('positions.index', compact('positions'));
-        // --- IGNORE ---
-        // return view('index', ['positions' => $positions]);
     }
+    // public function index()
+    // {
+    //     $positions = Positions::paginate(10);
+
+    //     return view('positions.index', compact('positions'));
+    //     // --- IGNORE ---
+    //     // return view('index', ['positions' => $positions]);
+    // }
 
     public function store(Request $request)
     {

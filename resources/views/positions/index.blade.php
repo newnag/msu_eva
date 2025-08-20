@@ -1,10 +1,21 @@
+{{--
+|--------------------------------------------------------------------------
+| index.blade.php
+|--------------------------------------------------------------------------
+| สำหรับแสดง/เพิ่ม/ลบ/แก้ไข ตำแหน่งงานในระบบ
+|
+| Components ที่ใช้:
+| - Main button: resources/views/components/button.blade.php
+| - Header pf page: resources/views/components/header.blade.php
+|--------------------------------------------------------------------------
+--}}
+
 @extends('layouts.app')
 @section('title', 'จัดการข้อมูลตำแหน่ง')
 @section('content')
     <style>
         body {
             background-color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #333333;
         }
 
@@ -17,7 +28,6 @@
         }
 
         .table-header {
-            background-color: #f3e8ff;
             border-bottom: 1px solid #e0e0e0;
             padding: 16px 24px;
         }
@@ -36,25 +46,20 @@
             width: 100%;
         }
 
+        /* Table style */
         .table-custom thead th {
             background-color: #ffffff;
             border: none;
             border-bottom: 2px solid #e0e0e0;
             padding: 16px 24px;
-            font-weight: 500;
-            color: #2c2c2c;
             text-align: center;
-            font-size: 0.9rem;
         }
 
         .table-custom tbody td {
             padding: 16px 24px;
             vertical-align: middle;
-            text-align: center;
             border: none;
             border-bottom: 1px solid #f0f0f0;
-            color: #333333;
-            font-size: 0.9rem;
         }
 
         .table-custom tbody tr:hover {
@@ -275,8 +280,8 @@
         }
 
         /* .modal-backdrop {
-            display: none !important;
-        } */
+                            display: none !important;
+                        } */
 
         body {
             overflow: auto !important;
@@ -351,63 +356,52 @@
             margin-top: 4px;
         }
     </style>
-
     <div class="container-fluid">
-        <!-- Page Header -->
+        <!-- Page Header and Button -->
         <x-header 
-            title="จัดการข้อมูลตำแหน่ง" 
-            text="ระบบจัดการข้อมูลตำแหน่งงาน" 
-            icon="fas fa-user-tie" />
-
-        <!-- Add Button -->
-        <div class="d-flex justify-content-end mb-3">
-            <x-button 
-                type="primary" 
-                buttonType="button"
-                text="เพิ่มตำแหน่ง" 
-                onclick="openCreateModal()" 
-                icon="fas fa-plus" />
-        </div>
+        title="จัดการข้อมูลตำแหน่งงานในระบบ"  
+        text="ตำแหน่งงานทั้งหมด {{ $positions->total() }} ตำแหน่ง"  
+        icon="fas fa-user-tie">
+            <x-slot name="action">
+                <x-button type="primary" buttonType="button" text="เพิ่มตำแหน่ง" onclick="openCreateModal()"
+                    icon="fas fa-plus" />
+            </x-slot>
+        </x-header>
 
         <!-- Table Container -->
-        <div class="table-container">
-            <div class="table-header">
-                <h4><i class="fas fa-table me-2"></i>ข้อมูลตำแหน่งงาน</h4>
-            </div>
-
+        <div class="mt-2 overflow-hidden rounded-md border border-gray-200 bg-white drop-shadow-md">
             <div class="table-responsive">
                 @if (isset($positions) && $positions->count() > 0)
-                    <table class="table table-custom">
+                    <table class="w-full border-collapse">
+                        <colgroup>
+                            <col class="w-[10%]" />
+                            <col class="w-[60%]" />
+                            <col class="w-[30%]" />
+                        </colgroup>
                         <thead>
-                            <tr>
-                                <th style="width: 10%">ลำดับ</th>
-                                <th style="width: 30%">ชื่อตำแหน่ง</th>
-                                {{-- <th style="width: 40%">คำอธิบาย</th> --}}
-                                <th style="width: 20%">การจัดการ</th>
+                            <tr class="border-b border-gray-200 bg-gray-50 drop-shadow-sm">
+                                <th class="py-3 px-6 text-center font-medium text-lg ">ลำดับ</th>
+                                <th class="py-3 pl-[300px] text-left font-medium text-lg ">ชื่อตำแหน่ง</th>
+                                <th class="py-3 px-6 text-center font-medium text-lg">การจัดการ</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="divide-y divide-gray-100">
                             @foreach ($positions as $index => $position)
-                                <tr>
-                                    <td>{{ $index + 1 }}</td>
-                                    <td><strong>{{ $position->name }}</strong></td>
-                                    {{-- <td>{{ $position->description ?? '-' }}</td> --}}
-                                    <td>
-                                        <div class="d-flex gap-2 align-items-center">
-                                            <x-button 
-                                                type="warning" 
-                                                text="แก้ไข" 
-                                                class="text-sm"
-                                                icon="fas fa-edit"
-                                                onclick="handleEdit({{ $position->id }}, '{{ $position->name }}', '{{ $position->description }}')"
-                                            />
-                                            <x-button 
-                                                type="danger" 
-                                                text="ลบ" 
-                                                class="text-sm"
-                                                icon="fas fa-trash-alt"
-                                                onclick="confirmDelete({{ $position->id }})"
-                                            />
+                                <tr class="hover:bg-gray-50">
+                                    <td class="py-[9px] px-6 text-center text-base md:text-lg font-normal">
+                                        {{ ($positions->currentPage() - 1) * $positions->perPage() + $index + 1 }}
+                                    </td>
+                                    <td class="py-[9px] pl-[300px] text-base md:text-lg font-normal mx-auto">
+                                        {{ $position->name }}
+                                    </td>
+                                    <td class="py-[9px] px-6">
+                                        <div class="flex items-center justify-center gap-3">
+                                            <!-- ปุ่มแก้ไข -->
+                                            <x-button type="outline-primary" text="แก้ไข" icon="fas fa-pen"
+                                                onclick="handleEdit({{ $position->id }}, '{{ $position->name }}', '{{ $position->description }}')" />
+                                            <!-- ปุ่มลบ -->
+                                            <x-button type="outline-danger" text="ลบ" icon="fas fa-trash-alt"
+                                                onclick="confirmDelete({{ $position->id }})" />
                                         </div>
                                     </td>
                                 </tr>
@@ -415,19 +409,51 @@
                         </tbody>
                     </table>
 
-                    <!-- Pagination -->
-                    <div class="p-3">
-                        {{ $positions->links() }}
+                    <!-- Pagination Control (Tailwind default) -->
+                    <div
+                        class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-3 border-t border-gray-200">
+                        {{-- ตัวเลือกจำนวนรายการต่อหน้า --}}
+                        <div class="flex items-center text-md text-gray-700">
+                            <span>แสดง</span>
+                            <form method="GET" class="mx-2">
+                                {{-- คงพารามิเตอร์อื่น ๆ ที่มีอยู่ ยกเว้น per_page/page --}}
+                                @foreach(request()->except(['per_page', 'page']) as $key => $val)
+                                    <input type="hidden" name="{{ $key }}" value="{{ $val }}">
+                                @endforeach
+
+                                <select name="per_page" onchange="this.form.submit()"
+                                    class="border border-gray-300 rounded-md px-2 py-1 text-md focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-500">
+                                    <option value="5" {{ request('per_page', 5) == 5 ? 'selected' : '' }}>5</option>
+                                    <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
+                                    <option value="20" {{ request('per_page') == 20 ? 'selected' : '' }}>20</option>
+                                    <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                                </select>
+                            </form>
+                            <span>รายการต่อหน้า</span>
+                        </div>
+
+                        {{-- ข้อมูลหน้าปัจจุบัน + ปุ่มเปลี่ยนหน้า --}}
+                        <div class="flex items-center gap-4">
+                            <span class=" text-md text-gray-700">
+                                หน้า {{ $positions->currentPage() }} จาก {{ $positions->lastPage() }}
+                            </span>
+                            <div>
+                                {{-- Tailwind default ของ Laravel และคง query string ทั้งหมด (ยกเว้น page) --}}
+                                {{ $positions->appends(request()->except('page'))->links() }}
+                            </div>
+                        </div>
                     </div>
+
                 @else
-                    <div class="empty-state">
-                        <i class="fas fa-user-tie"></i>
-                        <h5>ยังไม่มีข้อมูล</h5>
+                    <div class="text-center py-12 text-gray-600 bg-white">
+                        <i class="fas fa-user-tie text-4xl text-gray-300 mb-4 block"></i>
+                        <h5 class="text-gray-900 font-medium mb-1">ยังไม่มีข้อมูล</h5>
                         <p>คลิกปุ่ม "เพิ่มข้อมูล" เพื่อเริ่มต้นเพิ่มข้อมูลตำแหน่ง</p>
                     </div>
                 @endif
             </div>
         </div>
+
     </div>
 
     <!-- Modal -->
@@ -461,17 +487,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <x-button 
-                        type= defualt 
-                        text="ยกเลิก" 
-                        icon="fas fa-times"
-                        data-bs-dismiss="modal" />
-                    <x-button 
-                        type="primary"
-                        buttonType="button" 
-                        text="บันทึก" 
-                        onclick="submitForm()"
-                        icon="fas fa-save"
+                    <x-button type=defualt text="ยกเลิก" icon="fas fa-times" data-bs-dismiss="modal" />
+                    <x-button type="primary" buttonType="button" text="บันทึก" onclick="submitForm()" icon="fas fa-save"
                         id="positionSubmitBtn"
                         class="btn-disabled transition-colors disabled:opacity-50 disabled:cursor-not-allowed" />
                 </div>
@@ -479,25 +496,23 @@
         </div>
     </div>
 
-    <x-delete-warning-modal 
-        text="ตำแหน่ง" 
-        formAction="{{ route('positions.destroy', ':id') }}"
-        entityUrl="/positions" />
+    <x-delete-warning-modal text="ตำแหน่ง" formAction="{{ route('positions.destroy', ':id') }}" entityUrl="/positions" />
 
     @if(session('success'))
-    <div id="successMessage" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg z-[10000] transform transition-transform duration-300">
-        <div class="flex items-center space-x-3">
-            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-            <span>{{ session('success') }}</span>
-            <button onclick="this.parentElement.parentElement.remove()" class="ml-2 text-white hover:text-gray-200">
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        <div id="successMessage"
+            class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg z-[10000] transform transition-transform duration-300">
+            <div class="flex items-center space-x-3">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                 </svg>
-            </button>
+                <span>{{ session('success') }}</span>
+                <button onclick="this.parentElement.parentElement.remove()" class="ml-2 text-white hover:text-gray-200">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
         </div>
-    </div>
     @endif
 
     <script>
@@ -509,7 +524,6 @@
             const nameInput = document.getElementById('name');
             const nameError = document.getElementById('nameError');
             const submitBtn = document.getElementById('positionSubmitBtn');
-            
             if (!nameInput || !nameError || !submitBtn) return false;
 
             const nameValue = nameInput.value.trim();
@@ -529,7 +543,6 @@
             // อัพเดทสถานะปุ่มส่ง
             updateSubmitButton(isValid);
             isFormValid = isValid;
-            
             return isValid;
         }
 
@@ -624,7 +637,6 @@
                     const originalText = submitBtn.innerHTML;
                     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>กำลังบันทึก...';
                     submitBtn.disabled = true;
-                    
                     // กู้คืนปุ่มหากเกิดข้อผิดพลาด
                     setTimeout(() => {
                         submitBtn.innerHTML = originalText;
@@ -686,7 +698,7 @@
         }
 
         // Event listeners
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             clearModalBackdrop();
 
             // เพิ่ม event listeners สำหรับ real-time validation
@@ -695,17 +707,17 @@
 
             if (nameInput) {
                 // ตรวจสอบทันทีเมื่อพิมพ์
-                nameInput.addEventListener('input', function() {
+                nameInput.addEventListener('input', function () {
                     validateForm();
                 });
 
                 // ตรวจสอบเมื่อ focus out
-                nameInput.addEventListener('blur', function() {
+                nameInput.addEventListener('blur', function () {
                     validateForm();
                 });
 
                 // ตรวจสอบเมื่อกด Enter
-                nameInput.addEventListener('keypress', function(e) {
+                nameInput.addEventListener('keypress', function (e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
                         if (validateForm()) {
@@ -717,7 +729,7 @@
 
             if (descriptionInput) {
                 // ตรวจสอบเมื่อ focus out (สำหรับ validation ในอนาคต)
-                descriptionInput.addEventListener('blur', function() {
+                descriptionInput.addEventListener('blur', function () {
                     validateForm();
                 });
             }
@@ -725,7 +737,7 @@
             // ป้องกันการ submit ฟอร์มโดยตรง
             const form = document.getElementById('positionForm');
             if (form) {
-                form.addEventListener('submit', function(e) {
+                form.addEventListener('submit', function (e) {
                     e.preventDefault();
                     if (validateForm()) {
                         return true;
@@ -735,22 +747,22 @@
             }
         });
 
-        window.addEventListener('pageshow', function(event) {
+        window.addEventListener('pageshow', function (event) {
             clearModalBackdrop();
         });
 
-        window.addEventListener('load', function() {
+        window.addEventListener('load', function () {
             clearModalBackdrop();
         });
 
         // Auto-hide success/error messages after 5 seconds
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const messages = document.querySelectorAll('#successMessage, #warningMessage, #errorMessage');
-            messages.forEach(function(message) {
-                setTimeout(function() {
+            messages.forEach(function (message) {
+                setTimeout(function () {
                     if (message.parentElement) {
                         message.style.transform = 'translateX(100%)';
-                        setTimeout(function() {
+                        setTimeout(function () {
                             if (message.parentElement) {
                                 message.remove();
                             }

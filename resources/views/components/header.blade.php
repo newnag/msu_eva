@@ -4,32 +4,23 @@
     'icon' => null,
 ])
 
-<div class="page-header">
-    <h2><i class="{{ $icon }} me-2"></i>{{ $title}}</h2>
-    <p>{{ $text }}</p>
+<div class="flex flex-col md:flex-row md:justify-between bg-white p-8 md:px-8 mb-6 rounded drop-shadow-md border-t border-l border-gray-100">
+    <div class="text-left">
+        <h2 class="text-black mb-2 font-medium text-2xl flex items-center">
+            @if($icon)
+            <i class="{{ $icon }} mr-2 text-3xl"></i>
+            @endif
+            {{ $title }}
+        </h2>
+        <p class="text-gray-500 text-lg font-normal">{{ $text }}</p>
+    </div>
+
+    @isset($action)
+        <div class="flex items-center md:mt-0">
+            {{ $action }}
+        </div>
+    @endisset
 </div>
 
-<style>
-    .page-header {
-        background-color: #ffffff;
-        border: 1px solid #e0e0e0;
-        padding: 24px 32px;
-        border-radius: 4px;
-        margin-bottom: 24px;
-        text-align: center;
-    }
 
-    .page-header h2 {
-        color: #2c2c2c;
-        margin-bottom: 6px;
-        font-weight: 500;
-        font-size: 1.75rem;
-    }
-
-    .page-header p {
-        color: #666666;
-        margin: 0;
-        font-size: 0.95rem;
-    }
-</style>
 
