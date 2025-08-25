@@ -12,6 +12,7 @@ use App\Http\Controllers\Setting\SettingsController;
 use App\Http\Controllers\Settings\RoleAndPermissionController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
@@ -47,9 +48,25 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
         Route::get('/', [AssignmentDataController::class, 'index'])->name('index');
         Route::get('/create', [AssignmentDataController::class, 'create'])->name('create');
         Route::post('/', [AssignmentDataController::class, 'store'])->name('store');
+        Route::get('/{assignmentData}', [AssignmentDataController::class, 'show'])->name('show');
+        Route::get('/{assignmentData}/edit', [AssignmentDataController::class, 'edit'])->name('edit');
+        Route::put('/{assignmentData}', [AssignmentDataController::class, 'update'])->name('update');
+        Route::delete('/{assignmentData}', [AssignmentDataController::class, 'destroy'])->name('destroy');
     });
 
     Route::resource('/roles', RoleAndPermissionController::class);
+
+    Route::prefix('quality-scores')->name('quality-scores.')->group(function () {
+        Route::get('/', [App\Http\Controllers\QualityScoresController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\QualityScoresController::class, 'create'])->name('create');
+        Route::get('/get-criteria-by-report', [App\Http\Controllers\QualityScoresController::class, 'getCriteriaByReport'])->name('get-criteria-by-report');
+        Route::post('/', [App\Http\Controllers\QualityScoresController::class, 'store'])->name('store');
+        Route::get('/{qualityScore}', [App\Http\Controllers\QualityScoresController::class, 'show'])->name('show');
+        Route::get('/{qualityScore}/edit', [App\Http\Controllers\QualityScoresController::class, 'edit'])->name('edit');
+        Route::put('/{qualityScore}', [App\Http\Controllers\QualityScoresController::class, 'update'])->name('update');
+        Route::delete('/{qualityScore}', [App\Http\Controllers\QualityScoresController::class, 'destroy'])->name('destroy');
+        Route::post('/bulk-destroy', [App\Http\Controllers\QualityScoresController::class, 'bulkDestroy'])->name('bulk-destroy');
+    });
 
 });
 
@@ -60,6 +77,7 @@ Route::middleware(['auth:sanctum', 'role:ผู้ประเมิน'])->grou
         Route::get('/assignment/{id}/evaluate', [EvaluatorController::class, 'startEvaluation'])->name('assignment.evaluate');
         Route::get('/assignment/{id}/edit', [EvaluatorController::class, 'edit'])->name('evaluatee.edit');
         Route::put('/assignment/{id}', [EvaluatorController::class, 'update'])->name('evaluatee.update');
+        Route::get('/evaluator/{id}', [EvaluatorController::class, 'evaluator'])->name('evaluator.show');
         Route::put('/evaluator/{report}/reject', [EvaluatorController::class, 'reject'])->name('reject');
     });
 });
@@ -108,10 +126,11 @@ Route::middleware('auth:sanctum')->group(function () {
             // ถ้าเป็นผู้รับการประเมิน ให้ไปที่ dashboard ของผู้รับการประเมิน
             return redirect()->route('evaluatee.dashboard'); // ชื่อ route ของ evaluatee dashboard
         }
-
         // (ทางเลือก) ถ้ามี role อื่นๆ หรือไม่มี role ที่ตรงเงื่อนไขเลย
         // อาจจะ logout แล้ว redirect ไปหน้า login เพื่อความปลอดภัย
-        auth()->logout();
+        Auth::logout();
+
+        return redirect()->route('login')->with('error', 'คุณไม่มีสิทธิ์เข้าถึงส่วนนี้');
 
         return redirect()->route('login')->with('error', 'คุณไม่มีสิทธิ์เข้าถึงส่วนนี้');
 

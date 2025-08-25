@@ -130,7 +130,7 @@ class UserController extends Controller
                 'คำนำหน้า' => 'นาย',
                 'ชื่อ-สกุล' => 'สมชาย ใจดี',
                 'รหัสพนักงาน' => 'EMP001',
-                'สาขาวิชา' => 'อนามัยสิ่งแวดล้อม',
+                'สาขาวิชา' => 'หน่วยห้องสมุด',
                 'ตำแหน่ง' => 'รองศาสตราจารย์',
                 'ประเภทบุคลากร' => 'สนับสนุน',
                 'อีเมล' => 'somchai@university.ac.th',
@@ -144,7 +144,7 @@ class UserController extends Controller
                 'คำนำหน้า' => 'นาง',
                 'ชื่อ-สกุล' => 'สมหญิง ใจดี',
                 'รหัสพนักงาน' => 'EMP002',
-                'สาขาวิชา' => 'อนามัยสิ่งแวดล้อม',
+                'สาขาวิชา' => 'หน่วยจัดการงานทั่วไป',
                 'ตำแหน่ง' => 'รองศาสตราจารย์',
                 'ประเภทบุคลากร' => 'สนับสนุน',
                 'อีเมล' => 'somying@university.ac.th',
@@ -158,7 +158,7 @@ class UserController extends Controller
                 'คำนำหน้า' => 'นางสาว',
                 'ชื่อ-สกุล' => 'พรุ่งนี้ ใจดี',
                 'รหัสพนักงาน' => 'EMP003',
-                'สาขาวิชา' => 'สาธารณสุขศาสตร์',
+                'สาขาวิชา' => 'หน่วยจัดการงานทั่วไป',
                 'ตำแหน่ง' => 'หัวหน้าวิชาการ',
                 'ประเภทบุคลากร' => 'วิชาการ',
                 'อีเมล' => 'tomorrow@university.ac.th',
@@ -172,7 +172,7 @@ class UserController extends Controller
                 'คำนำหน้า' => 'นาย',
                 'ชื่อ-สกุล' => 'วันนี้ ใจดี',
                 'รหัสพนักงาน' => 'EMP004',
-                'สาขาวิชา' => 'อาชีวอนามัยและความปลอดภัย',
+                'สาขาวิชา' => 'หน่วยเทคโนโลยี',
                 'ตำแหน่ง' => 'หัวหน้าวิชาการ',
                 'ประเภทบุคลากร' => 'สนับสนุน',
                 'อีเมล' => 'today@university.ac.th',
@@ -239,19 +239,16 @@ class UserController extends Controller
 
         // --- Filter ที่มีอยู่เดิม ---
         if ($request->filled('department_id')) {
-            $query->where('department_id', $request->department_id);
+            $query->whereIn('department_id', (array) $request->department_id);
         }
         if ($request->filled('position_id')) {
-            $query->where('position_id', $request->position_id);
+            $query->whereIn('position_id', (array) $request->position_id);
         }
         if ($request->filled('personnel_type')) {
-            // หมายเหตุ: ถ้า filter นี้มาจาก <x-filter> ที่คุณให้มาก่อนหน้า
-            // ชื่อ name อาจจะเป็น 'personnel_type_id' ไม่ใช่ 'personnel_type'
-            // กรุณาตรวจสอบให้ตรงกัน
-            $query->where('personnel_type', $request->personnel_type);
+            $query->whereIn('personnel_type', (array) $request->personnel_type);
         }
         if ($request->filled('status')) {
-            $query->where('status', $request->status);
+            $query->whereIn('status', (array) $request->status);
         }
         // -------------------------
 

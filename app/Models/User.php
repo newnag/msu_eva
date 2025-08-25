@@ -12,12 +12,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements CanResetPassword
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use CanResetPasswordTrait, HasApiTokens, HasFactory, HasRoles, Notifiable;
+    use CanResetPasswordTrait, HasApiTokens, HasFactory, HasRoles, LogsActivity, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -33,6 +35,8 @@ class User extends Authenticatable implements CanResetPassword
         'phone',
         'personnel_type',
         'bio',
+        'portfolio',
+        'profile_photo_path',
         'status',
         'position_id',
         'department_id',
@@ -59,9 +63,38 @@ class User extends Authenticatable implements CanResetPassword
         ];
     }
 
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnlyDirty()
+            ->useLogName('user_info') // custom log_name in DB
+            ->setDescriptionForEvent(function (string $eventName) {
+                return match ($eventName) {
+                    'updated' => 'แก้ไขข้อมูลผู้ใช้',
+                    'created' => 'สร้างผู้ใช้ใหม่',
+                    default => $eventName,
+                };
+            });
+    }
+
     public function getAuthIdentifierName()
     {
         return 'employee_id';
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'employee_id';
+    }
+
+    /**
+     * Get the user's profile photo URL.
+     */
+    public function getProfilePhotoUrlAttribute()
+    {
+        return $this->profile_photo_path
+            ? asset('storage/'.$this->profile_photo_path)
+            : asset('images/default-avatar.svg');
     }
 
     public function position()
@@ -76,12 +109,20 @@ class User extends Authenticatable implements CanResetPassword
 
     public function assignment()
     {
-        return $this->hasMany(Assignments::class, 'evaluatee', 'id');
+        return $this->hasMany(Assignments::class, 'evaluatee_id', 'id');
     }
 
     public function evaluatorAssignments()
     {
-        return $this->hasMany(Assignments::class, 'evaluator', 'id');
+        // Get assignments through evaluator position
+        return $this->hasManyThrough(
+            Assignments::class,
+            \App\Models\AssignmentData::class,
+            'evaluator_position_id', // Foreign key on assignment_datas table
+            'assignment_data_id', // Foreign key on assignments table
+            'position_id', // Local key on users table
+            'id' // Local key on assignment_datas table
+        );
     }
 
     public function sendPasswordResetNotification($token)

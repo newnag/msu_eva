@@ -12,8 +12,7 @@ class Assignments extends Model
     protected $fillable = [
         'assignment_data_id',
         'report_id',
-        'evaluatee',
-        'evaluator',
+        'evaluatee_id',
     ];
 
     public $timestamps = false;
@@ -31,11 +30,35 @@ class Assignments extends Model
 
     public function evaluateeUser()
     {
-        return $this->belongsTo(User::class, 'evaluatee', 'id');
+        return $this->belongsTo(User::class, 'evaluatee_id', 'id');
     }
 
     public function evaluatorUser()
     {
-        return $this->belongsTo(User::class, 'evaluator', 'id');
+        // This creates a proper HasOneThrough relationship
+        return $this->hasOneThrough(
+            User::class,
+            AssignmentData::class,
+            'id',                    // Foreign key on assignment_datas table
+            'position_id',           // Foreign key on users table
+            'assignment_data_id',    // Local key on assignments table
+            'evaluator_position_id'  // Local key on assignment_datas table
+        );
+    }
+
+    public function evaluatorUsers()
+    {
+        // Get all users from evaluator position safely
+        if (! $this->assignmentData || ! $this->assignmentData->evaluator_position_id) {
+            return collect();
+        }
+
+        return User::where('position_id', $this->assignmentData->evaluator_position_id)->get();
+    }
+
+    // Helper to get evaluator position
+    public function evaluatorPosition()
+    {
+        return $this->assignmentData?->evaluatorPosition();
     }
 }
