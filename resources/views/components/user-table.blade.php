@@ -2,7 +2,7 @@
 
 @php
     $roleClass = match ($employee['role']) {
-        'admin' => 'bg-sky-100 text-sky-700 ring-1 ring-sky-200',
+        'ผู้ดูแลระบบ' => 'bg-sky-100 text-sky-700 ring-1 ring-sky-200',
         'ผู้บริหาร' => 'bg-purple-100 text-purple-700 ring-1 ring-purple-200',
         'ผู้ประเมิน' => 'bg-blue-100 text-blue-700 ring-1 ring-blue-200',
         'ผู้รับการประเมิน' => 'bg-violet-100 text-violet-700 ring-1 ring-violet-200',

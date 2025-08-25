@@ -36,7 +36,7 @@ class RoleAndPermissionController extends Controller
             Permission::firstOrCreate(['name' => $permission]);
         }
 
-        $admin = Role::firstOrCreate(['name' => 'admin']);
+        $admin = Role::firstOrCreate(['name' => 'ผู้ดูแลระบบ']);
         $admin->givePermissionTo(Permission::all());
 
         $evaluator = Role::firstOrCreate(['name' => 'ผู้ประเมิน']);

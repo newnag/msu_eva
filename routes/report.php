@@ -14,7 +14,7 @@ Route::prefix('report-version')->name('report-structure.')->group(function () {
 });
 
 // Criteria Config UI routes (for Blade views)
-Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
+Route::middleware(['auth:sanctum', 'role:ผู้ดูแลระบบ'])->group(function () {
     Route::get('/criteria-config', function () {
         return view('criteria_config.index');
     })->name('criteria_config.index');

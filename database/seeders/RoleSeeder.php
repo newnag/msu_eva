@@ -15,7 +15,7 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         // create roles
-        $adminRole = Role::create(['name' => 'admin']);
+        $adminRole = Role::create(['name' => 'ผู้ดูแลระบบ']);
         $managerRole = Role::create(['name' => 'ผู้บริหาร']);
         $evaluatorRole = Role::create(['name' => 'ผู้ประเมิน']);
         $evaluateeRole = Role::create(['name' => 'ผู้รับการประเมิน']);

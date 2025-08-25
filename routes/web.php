@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
+Route::middleware(['auth:sanctum', 'role:ผู้ดูแลระบบ'])->group(function () {
     Route::prefix('departments')->name('departments.')->group(function () {
         Route::get('/', [DepartmentsController::class, 'index'])->name('index');
         Route::post('/store', [DepartmentsController::class, 'store'])->name('store');
@@ -88,7 +88,7 @@ Route::middleware(['auth:sanctum', 'role:ผู้รับการประเ
     Route::post('/evaluation/{id}/scores', [EvaluationScoreController::class, 'storeEvaluationScores'])->name('evaluation_score.store');
 });
 
-Route::middleware(['auth:sanctum', 'role:admin|ผู้บริหาร'])->group(function () {
+Route::middleware(['auth:sanctum', 'role:ผู้ดูแลระบบ|ผู้บริหาร'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     // Route::get('/evaluation/{id}', [DashboardEvaluateeController::class, 'evaluation'])->name('evaluation.show');
     Route::get('/dashboard/{id}', [DashboardController::class, 'show'])->name('dashboard.show');
@@ -112,7 +112,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/', function (Request $request) {
         $user = $request->user();
 
-        if ($user->hasRole('admin') || $user->hasRole('ผู้บริหาร')) {
+        if ($user->hasRole('ผู้ดูแลระบบ') || $user->hasRole('ผู้บริหาร')) {
             // ถ้าเป็น admin หรือ ผู้บริหาร ให้ไปที่ dashboard ของ admin
             return redirect()->route('dashboard'); // ชื่อ route ของ admin dashboard
         }

@@ -76,7 +76,7 @@
                 <nav class="d-none d-xl-block">
                     <ul class="nav nav-pills align-items-center gap-2">
                         
-                        @if(auth()->user() && auth()->user()->hasRole('ผู้บริหาร') || auth()->user() && auth()->user()->hasRole('admin'))
+                        @if(auth()->user() && auth()->user()->hasRole('ผู้บริหาร') || auth()->user() && auth()->user()->hasRole('ผู้ดูแลระบบ'))
                             <li class="nav-item">
                                 <a class="nav-link text-white " href="/dashboard">แดชบอร์ด</a>
                             </li>
@@ -98,7 +98,7 @@
 
                         <!-- แอดมิน -->
 
-                        @if(auth()->user() && auth()->user()->hasRole('admin'))
+                        @if(auth()->user() && auth()->user()->hasRole('ผู้ดูแลระบบ'))
                         <li class="nav-item">
                             <a class="nav-link text-white" href="{{ route('users.index') }}">จัดการสมาชิก</a>
                         </li>
@@ -194,7 +194,7 @@
                     </a>
                 @endif
                 
-                @if(auth()->user() && auth()->user()->hasRole('admin'))
+                @if(auth()->user() && auth()->user()->hasRole('ผู้ดูแลระบบ'))
                     <a href="/dashboard" class="mobile-nav-item">
                         <i class="fas fa-home" style="width: 20px; margin-right: 10px;"></i>
                         หน้าแรก
