@@ -15,6 +15,7 @@ class FileExportController extends Controller
         $query = $this->filteredAssignmentsQuery($request);
 
         return Excel::download(new ReportsExport($query), 'รายงานการประเมินผล.xlsx');
+        // return dd($query->get());
     }
 
     public function adminExportDashboard(Request $request)

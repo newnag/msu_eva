@@ -235,7 +235,7 @@
                         </div>
                         <div  class="flex flex-wrap justify-between gap-2">
                             <x-export-button 
-                                :route="route('export.reports', request()->query())"
+                                :route="route('admin.export.reports', request()->query())"
                                 label="ส่งออกExcelทั้งหมด" />
                              <x-filter-badge-single 
                                 name="year"
@@ -362,7 +362,7 @@
                                     <td class="px-3 py-4 whitespace-nowrap">
                                         <div class="flex justify-center items-center">
                                             @if($status === 'Completed')
-                                                <a href="{{ route('export.reports', ['id' => $evaluation->report->id ?? 0]) }}"
+                                                <a href="{{ route('single.reports.export', ['id' => $evaluation->report->id ?? 0]) }}"
                                                 class="p-2 bg-green-400 hover:bg-green-500 text-white rounded-md transition duration-200"
                                                 title="ส่งออกรายงานผลการประเมินของ {{ $evaluateeName  ?? 'บุคคล' }}">
                                                     <i class="fas fa-file-export"></i>
