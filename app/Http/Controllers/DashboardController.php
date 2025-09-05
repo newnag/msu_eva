@@ -9,16 +9,26 @@ use App\Models\Department;
 use App\Models\QuantityScore;
 use App\Models\Reports;
 use App\Models\User;
-use App\Services\GraphDataService;
-use App\Services\ScoreService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Services\ScoreService;
+use App\Services\GraphDataService;  
+use App\Services\EvaluationService;
 
 class DashboardController extends Controller
 {
-    public function index(Request $request)
+    private function countByStatus($evaluations, $statuses)
+    {
+        return $evaluations->filter(function ($assignment) use ($statuses) {
+            $reportStatus = optional($assignment->report)->status ?? 'Assigned';
+
+            return in_array($reportStatus, $statuses);
+        })->count();
+    }
+
+    public function index(Request $request, EvaluationService $evaluationService)
     {
         // Get filter parameters
         $startDate = $request->input('start_time');
@@ -26,6 +36,7 @@ class DashboardController extends Controller
         $departmentName = $request->input('department_name');
 
         // Fetch all departments for the filter dropdown
+        $filters = $request->only(['search', 'year', 'start_time', 'end_time', 'department_name']);
         $departments = Department::all();
 
         // If no filters are provided, don't set default dates to ensure all data is fetched
@@ -36,13 +47,9 @@ class DashboardController extends Controller
         // }
 
         // Base query for reports
-        $allReportsData = Reports::with([
-            'reportData', // report_datas table
-            'assignments.assignmentData.evaluatorPosition', // assignment_datas -> positions
-            'assignments.assignmentData.evaluateePosition', // assignment_datas -> positions
-            'assignments.evaluateeUser.department', // users -> departments (evaluatee)
-            'assignments.evaluateeUser.position', // users -> positions (evaluatee)
-        ])->get();
+        $allReportsData = $evaluationService->getAllReportsWithAssignments();
+        $evaluations = $evaluationService->mapAssignments($allReportsData);
+        $evaluations = $evaluationService->filterEvaluations($evaluations, $filters);
 
         // Get ALL evaluations (Director can see everything, no department filtering)
         $evaluations = $allReportsData->map(function ($report) {
@@ -92,6 +99,14 @@ class DashboardController extends Controller
                 return optional($assignment->evaluateeUser?->department)->department_name === $departmentName;
             });
         }
+        $statusCounts = [
+            'ทั้งหมด' => $evaluations->count(),
+            'มอบหมาย' => $this->countByStatus($evaluations, ['Assigned']),
+            'เริ่มกรอกข้อมูล' => $this->countByStatus($evaluations, ['Draft']),
+            'กำลังดำเนินการ' => $this->countByStatus($evaluations, 
+            ['Pending','Evaluator_draft','Director_assigned','Director_draft', 'Manager_draft', 'Manager_assign']),
+            'ประเมินเสร็จสิ้น' => $this->countByStatus($evaluations, ['Completed']),
+        ];
 
         $totalEvaluations = $evaluations->count();
 
@@ -121,6 +136,7 @@ class DashboardController extends Controller
 
         return view('dashboard.index', [
             'averageScore' => $averageScore,
+            'statusCounts' => $statusCounts,
             'evaluations' => $evaluations,
             'scatterData' => $scatterData,
             'chartData' => $chartData,
@@ -132,6 +148,7 @@ class DashboardController extends Controller
             // 'reports' => $reportsQuery->get(),
             'reports' => $reportsWithScores,
             'evaluationPeriod' => $evaluationPeriod,
+            'years' => $evaluations->pluck('assignmentData.start_time')->map(fn($d) => Carbon::parse($d)->year)->unique()->sortDesc(),
         ]);
 
         // return response()->json([

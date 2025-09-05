@@ -10,6 +10,7 @@ use App\Services\ScoreService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Services\EvaluationService;
 
 class DirectorController extends Controller
 {
@@ -22,7 +23,7 @@ class DirectorController extends Controller
         })->count();
     }
 
-    public function dashboard(Request $request)
+    public function dashboard(Request $request, EvaluationService $evaluationService)
     {
         // Load user with comprehensive relationships based on actual schema
         $user = $request->user()->load([
@@ -30,19 +31,13 @@ class DirectorController extends Controller
             'department',
         ]);
 
-        $startDate = $request->input('start_time');
-        $endDate = $request->input('end_time');
-        $departmentName = $request->input('department_name');
+        $filters = $request->only(['search', 'year', 'start_time', 'end_time', 'department_name']);
         $departments = Departments::all();
 
         // Get ALL reports with complete data (Director has access to everything)
-        $allReportsData = Reports::with([
-            'reportData', // report_datas table
-            'assignments.assignmentData.evaluatorPosition', // assignment_datas -> positions
-            'assignments.assignmentData.evaluateePosition', // assignment_datas -> positions
-            'assignments.evaluateeUser.department', // users -> departments (evaluatee)
-            'assignments.evaluateeUser.position', // users -> positions (evaluatee)
-        ])->get();
+        $allReportsData = $evaluationService->getAllReportsWithAssignments();
+        $evaluations = $evaluationService->mapAssignments($allReportsData);
+        $evaluations = $evaluationService->filterEvaluations($evaluations, $filters);
 
         // Get ALL evaluations (Director can see everything, no department filtering)
         $evaluations = $allReportsData->map(function ($report) {
@@ -178,6 +173,8 @@ class DirectorController extends Controller
             });
         }
         // sort department
+        $userAsEvaluatee = $evaluationService->getUserAsEvaluatee($user);
+        $userAsEvaluator = $evaluationService->getUserAsEvaluator($user);
 
         // Count status for ALL evaluations (Director sees everything)
         $statusCounts = [
@@ -226,7 +223,7 @@ class DirectorController extends Controller
             'userAsEvaluatee' => $userAsEvaluatee, // Director's evaluatee assignments
             'userAsEvaluator' => $userAsEvaluator, // Director's evaluator assignments
             'allReportsData' => $allReportsData, // Complete reports data
-            'years' => $years,
+            'years' => $evaluations->pluck('assignmentData.start_time')->map(fn($d) => Carbon::parse($d)->year)->unique()->sortDesc(),
             'averageScore' => $averageScore,
             'scatterData' => $scatterData,
             'chartData' => $chartData,
