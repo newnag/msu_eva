@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Assignments;
 use App\Models\EvidenceAnswer;
 use App\Models\QualityScore;
 use App\Models\QuantityScore;
@@ -10,6 +11,25 @@ use Illuminate\Support\Facades\DB;
 
 class ReportDataService
 {
+    public function getEvaluatorAssignmentForUser($reportId, $user)
+    {
+        return Assignments::with([
+            'assignmentData',
+            'evaluateeUser.department',
+            'evaluateeUser.position',
+            'evaluatorUser',
+            'report.reportData.criteriaVersion', // Optional but useful
+        ])
+            ->where('report_id', $reportId)
+            ->whereHas('assignmentData', function ($q) use ($user) {
+                $q->where('evaluator_position_id', $user->position_id);
+            })
+            ->whereHas('evaluateeUser', function ($q) use ($user) {
+                $q->where('department_id', $user->department_id);
+            })
+            ->first();
+    }
+
     public function getReportData($id)
     {
         $report = Reports::with([
@@ -287,6 +307,7 @@ class ReportDataService
                             'name' => $subCriteria->name,
                             'sequence' => $subCriteria->sequence,
                             'num_score' => $subCriteria->num_score,
+                            'description' => $subCriteria->description,
                             'user_selected' => $userSelected,
                             'score' => $qualityScore?->score ?? '',
                             'calculated_score' => $calculatedScore,

@@ -105,10 +105,12 @@ Route::middleware(['auth:sanctum', 'role:กรรมการ'])->group(functio
 Route::middleware(['auth:sanctum', 'role:ผู้บริหาร'])->group(function () {
     Route::get('/manager-dashboard', [ManagerController::class, 'dashboard'])->name('manager.dashboard');
     Route::get('/manager/{id}', [ManagerScoreController::class, 'manager'])->name('manager.show');
+    Route::get('/manager/{id}', [ManagerScoreController::class, 'manager'])->name('manager.show');
     Route::post('/manager/{id}/scores', [ManagerScoreController::class, 'storeManagerScores'])->name('manager_score.store');
 });
 
 Route::middleware(['auth:sanctum', 'role:admin|ผู้บริหาร'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     // Route::get('/evaluation/{id}', [DashboardEvaluateeController::class, 'evaluation'])->name('evaluation.show');
     Route::get('/dashboard/{id}', [DashboardController::class, 'show'])->name('dashboard.show');
@@ -120,6 +122,9 @@ Route::middleware(['auth:sanctum', 'role:admin|ผู้บริหาร|ก�
     //     return Excel::download(new ReportsExport(), 'รายงานผลการประเมินโดยรวม.xlsx');
     // })->name('export.reports');
     Route::get('/export/reports', [FileExportController::class, 'exportDashboard'])->name('export.reports');
+    Route::get('/admin/export/reports', [FileExportController::class, 'adminExportDashboard'])->name('admin.export.reports');
+    Route::get('/reports/{id}/export', [FileExportController::class, 'exportSingleReport'])
+        ->name('single.reports.export');
     Route::get('/admin/export/reports', [FileExportController::class, 'adminExportDashboard'])->name('admin.export.reports');
     Route::get('/reports/{id}/export', [FileExportController::class, 'exportSingleReport'])
         ->name('single.reports.export');
