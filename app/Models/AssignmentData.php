@@ -2,19 +2,26 @@
 
 namespace App\Models;
 
+use App\Models\Setting\Positions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class AssignmentData extends Model
 {
     use HasFactory;
+
     protected $table = 'assignment_datas';
+
     protected $fillable = [
+        'evaluator_position_id',
+        'evaluatee_position_id',
         'start_time',
         'end_time',
     ];
 
     protected $casts = [
+        'evaluator_position_id' => 'integer',
+        'evaluatee_position_id' => 'integer',
         'start_time' => 'date',
         'end_time' => 'date',
     ];
@@ -23,6 +30,28 @@ class AssignmentData extends Model
     public function assignments()
     {
         return $this->hasMany(Assignments::class);
+    }
+
+    public function evaluatorPosition()
+    {
+        return $this->belongsTo(Positions::class, 'evaluator_position_id');
+    }
+
+    public function evaluateePosition()
+    {
+        return $this->belongsTo(Positions::class, 'evaluatee_position_id');
+    }
+
+    public function positions()
+    {
+        return $this->hasMany(Positions::class, 'id', 'evaluator_position_id');
+    }
+
+    public function evaluatorUser()
+    {
+        // ต้องเข้าใจบริบทของฟังก์ชันนี้ก่อน - อาจต้องแก้ไขตรรกะทั้งหมด
+        return User::where('position_id', $this->evaluator_position_id)
+            ->first();
     }
 
     // ดึง user ที่เกี่ยวข้องกับ assignment data (เช่น evaluator หรือ evaluatee)
@@ -34,7 +63,7 @@ class AssignmentData extends Model
             'assignment_data_id', // Foreign key on assignments table
             'id', // Foreign key on users table
             'id', // Local key on assignment_datas table
-            'evaluator' // Local key on assignments table
+            'evaluatee_id' // Local key on assignments table
         );
     }
 
@@ -46,7 +75,7 @@ class AssignmentData extends Model
             'assignment_data_id',
             'id',
             'id',
-            'evaluatee'
+            'evaluatee_id'
         );
     }
 }

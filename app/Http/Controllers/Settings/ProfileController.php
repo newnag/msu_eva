@@ -5,25 +5,39 @@ namespace App\Http\Controllers\Settings;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\ProfileUpdateRequest;
 use App\Models\Setting\Departments;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Setting\Positions;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
     /**
      * Show the user's profile settings page.
      */
-
     public function show(Request $request)
     {
-        $user = $request->user()->load('position', 'department','roles');
+        $user = $request->user()->load('position', 'department', 'roles');
 
         return view('user.profile.show-profile', compact('user'));
+    }
+
+    /**
+     * Show public profile page for any user.
+     */
+    public function showPublic($uuid)
+    {
+        $user = User::where('public_profile_uuid', $uuid)
+            ->where('is_public_profile_enabled', true)
+            ->firstOrFail();
+
+        $user = $user->load('position', 'department', 'roles');
+
+        return view('user.profile.show-profile-public', compact('user'));
     }
 
     public function edit()
@@ -31,7 +45,7 @@ class ProfileController extends Controller
         $user = auth()->user();
         $positions = Positions::all(); // Your positions
         $departments = Departments::all(); // Your departments
-        
+
         return view('user.profile.edit-profile', compact('user', 'positions', 'departments'));
     }
 
@@ -43,31 +57,34 @@ class ProfileController extends Controller
         $user = $request->user();
         $validated = $request->validated();
 
-        // Handle photo upload
-        // if ($request->hasFile('photo')) {
-        //     // Delete old photo if exists
-        //     if ($user->photo_url && Storage::disk('public')->exists($user->photo_url)) {
-        //         Storage::disk('public')->delete($user->photo_url);
-        //     }
+        // Handle profile photo upload
+        if ($request->hasFile('profile_photo')) {
+            // Delete old photo if exists
+            if ($user->profile_photo_path && Storage::disk('public')->exists($user->profile_photo_path)) {
+                Storage::disk('public')->delete($user->profile_photo_path);
+            }
 
-        //     // Store new photo
-        //     $photoPath = $request->file('photo')->store('profile-photos', 'public');
-        //     $validated['photo_url'] = $photoPath;
-        // }
+            // Store new photo
+            $photoPath = $request->file('profile_photo')->store('profile-photos', 'public');
+            $validated['profile_photo_path'] = $photoPath;
+        }
+
+        // Remove the profile_photo from validated data as we handle it separately
+        unset($validated['profile_photo']);
 
         // Handle password update
         if ($request->filled('current_password')) {
-            if (!Hash::check($request->current_password, $user->password)) {
+            if (! Hash::check($request->current_password, $user->password)) {
                 return back()->withErrors(['current_password' => 'รหัสผ่านปัจจุบันไม่ถูกต้อง']);
             }
-            
+
             if ($request->filled('password')) {
                 $validated['password'] = Hash::make($request->password);
             }
         }
 
         // Remove password fields if not updating password
-        if (!$request->filled('password')) {
+        if (! $request->filled('password')) {
             unset($validated['current_password'], $validated['password'], $validated['password_confirmation']);
         }
 

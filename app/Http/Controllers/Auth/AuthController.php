@@ -4,11 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use App\Http\Requests\Auth\LoginRequest;
-use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 
 class AuthController extends Controller
@@ -20,19 +19,19 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        
+
         $credentials = $request->validate([
             'employee_id' => ['required', 'string'],
             'password' => ['required', 'string'],
         ]);
 
-        $key = Str::lower($request->input('employee_id')) . '|' . $request->ip();
+        $key = Str::lower($request->input('employee_id')).'|'.$request->ip();
         $maxAttempts = 5;
         $decaySeconds = 60;
 
         if (RateLimiter::tooManyAttempts($key, $maxAttempts)) {
             return response()->json([
-                'message' => 'คุณพยายามเข้าสู่ระบบมากเกินไป กรุณารอ 1 นาทีแล้วลองใหม่อีกครั้ง.'
+                'message' => 'คุณพยายามเข้าสู่ระบบมากเกินไป กรุณารอ 1 นาทีแล้วลองใหม่อีกครั้ง.',
             ], 429);
         }
 
@@ -40,9 +39,16 @@ class AuthController extends Controller
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
             RateLimiter::hit($key, $decaySeconds);
+
             return response()->json([
-                'message' => 'กรุณากรอกหมายเลขประจำตัวและรหัสผ่านให้ถูกต้อง'
+                'message' => 'กรุณากรอกหมายเลขประจำตัวและรหัสผ่านให้ถูกต้อง',
             ], 401);
+        }
+
+        if ($user->status === 'inactive') {
+            return response()->json([
+                'message' => 'บัญชีของคุณถูกระงับการใช้งาน กรุณาติดต่อผู้ดูแลระบบ',
+            ], 413);
         }
 
         RateLimiter::clear($key);
@@ -55,12 +61,15 @@ class AuthController extends Controller
         if ($user->hasRole('admin')) {
             $redirect = '/dashboard';
         } elseif ($user->hasRole('ผู้บริหาร')) {
-            $redirect = '/dashboard';
+            $redirect = '/manager-dashboard';
+        } elseif ($user->hasRole('กรรมการ')) {
+            $redirect = '/director-dashboard';
         } elseif ($user->hasRole('ผู้ประเมิน')) {
             $redirect = '/evaluator-dashboard';
         } elseif ($user->hasRole('ผู้รับการประเมิน')) {
             $redirect = '/evaluatee-dashboard';
         }
+
         return response()->json(['redirect' => $redirect]);
     }
 

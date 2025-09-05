@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Assignments extends Model
 {
@@ -13,8 +12,7 @@ class Assignments extends Model
     protected $fillable = [
         'assignment_data_id',
         'report_id',
-        'evaluatee',
-        'evaluator',
+        'evaluatee_id',
     ];
 
     public $timestamps = false;
@@ -32,11 +30,43 @@ class Assignments extends Model
 
     public function evaluateeUser()
     {
-        return $this->belongsTo(User::class, 'evaluatee', 'id');
+        return $this->belongsTo(User::class, 'evaluatee_id', 'id');
     }
 
     public function evaluatorUser()
     {
-        return $this->belongsTo(User::class, 'evaluator', 'id');
+        return $this->hasOneThrough(
+            User::class,              // Final model
+            AssignmentData::class,    // Intermediate
+            'id',                     // Local key on AssignmentData
+            'position_id',            // Foreign key on Users
+            'assignment_data_id',     // Local key on Assignments
+            'evaluator_position_id'   // Foreign key on AssignmentData
+        );
+    }
+
+    public function evaluatorUsers()
+    {
+        return $this->hasManyThrough(
+            User::class,            // Final model
+            AssignmentData::class,  // Intermediate
+            'id',                   // Local key on AssignmentData
+            'position_id',          // Foreign key on Users
+            'assignment_data_id',   // Local key on Assignments
+            'evaluator_position_id' // Foreign key on AssignmentData
+        );
+    }
+
+    // Helper to get evaluator position
+    public function evaluatorPosition()
+    {
+        return $this->assignmentData?->evaluatorPosition();
+    }
+
+    public function getEvaluatorUsers()
+    {
+        return $this->assignmentData
+            ? $this->evaluatorUsers()->get()
+            : collect();
     }
 }

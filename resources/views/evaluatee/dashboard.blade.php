@@ -5,7 +5,9 @@
 @section('content')
 <div class="max-w-8xl mx-auto space-y-6">
     <!-- Profile Card at Top -->
-    <x-profile-card :user="$user"/>
+    <x-profile-card 
+        :user="$user"
+        title="ข้อมูลผู้รับการประเมิน"/>
     
     <!-- Evaluation Header -->
     <!-- <x-evaluation-header 
@@ -14,10 +16,38 @@
         deadline="1 พฤษภาคม 2568"
     /> -->
     
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pr-10 pl-10">
+        <div class="grid grid-cols-1 md:grid-rows-2 gap-2">
+            <x-summary-score
+                title="คะแนนสูงสุด"
+                :value="$highestScore"
+                subtitle="คะแนนสูงสุดทุกปีการประเมิน"
+                color="blue"
+                icon="fas fa-trophy"
+                iconSize="text-3xl"
+            />
+
+            <x-summary-score
+                title="คะแนนเฉลี่ย"
+                :value="$averageScore"
+                subtitle="คะแนนเฉลี่ยทุกปีการประเมิน"
+                color="purple"
+            />
+        </div>
+
+        <x-scatter-chart-component 
+            :scatter-data="$scatterData"
+            chart-id="myChart"
+            title="กราฟการกระจายตัวของคะแนน"
+        />
+
+    </div>
+
     <!-- Evaluation Summary -->
     <x-evaluation-summary 
         :evaluations="$evaluations" 
         :status-counts="$statusCounts"
+        :years="$years"
     />
 </div>
 

@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Reports extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'reports';
 
     protected $fillable = [
@@ -30,21 +30,21 @@ class Reports extends Model
 
     public function quantityScores()
     {
-        return $this->hasMany(QuantityScore::class);
+        return $this->hasMany(QuantityScore::class, 'report_id');
     }
 
     public function qualityScores()
     {
-        return $this->hasMany(QualityScore::class);
+        return $this->hasMany(QualityScore::class, 'report_id');
     }
 
     public function evidenceAnswers()
     {
-        return $this->hasMany(EvidenceAnswer::class);
+        return $this->hasMany(EvidenceAnswer::class, 'report_id');
     }
 
     public function assignments()
     {
-        return $this->hasOne(Assignments::class,'report_id');
+        return $this->hasOne(Assignments::class, 'report_id');
     }
 }
