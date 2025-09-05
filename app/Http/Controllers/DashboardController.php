@@ -9,16 +9,37 @@ use App\Models\Department;
 use App\Models\QuantityScore;
 use App\Models\Reports;
 use App\Models\User;
+use App\Services\EvaluationService;
+use App\Services\GraphDataService;
+use App\Services\ReportDataService;
+use App\Services\ScoreService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Services\ScoreService;
-use App\Services\GraphDataService;  
-use App\Services\EvaluationService;
 
 class DashboardController extends Controller
 {
+    protected $allowedEditStatuses = [];
+
+    protected $reportDataService;
+
+    public function __construct(ReportDataService $reportDataService)
+    {
+        $this->reportDataService = $reportDataService;
+    }
+
+    protected function checkReportEditableStatus(Reports $report, $action)
+    {
+        if (! in_array($report->status, $this->allowedEditStatuses)) {
+            return response()->json([
+                'message' => "Cannot {$action}.",
+            ], 403);
+        }
+
+        return null; // ถ้าผ่านการตรวจสอบ
+    }
+
     private function countByStatus($evaluations, $statuses)
     {
         return $evaluations->filter(function ($assignment) use ($statuses) {
@@ -103,8 +124,8 @@ class DashboardController extends Controller
             'ทั้งหมด' => $evaluations->count(),
             'มอบหมาย' => $this->countByStatus($evaluations, ['Assigned']),
             'เริ่มกรอกข้อมูล' => $this->countByStatus($evaluations, ['Draft']),
-            'กำลังดำเนินการ' => $this->countByStatus($evaluations, 
-            ['Pending','Evaluator_draft','Director_assigned','Director_draft', 'Manager_draft', 'Manager_assign']),
+            'กำลังดำเนินการ' => $this->countByStatus($evaluations,
+                ['Pending', 'Evaluator_draft', 'Director_assigned', 'Director_draft', 'Manager_draft', 'Manager_assign']),
             'ประเมินเสร็จสิ้น' => $this->countByStatus($evaluations, ['Completed']),
         ];
 
@@ -148,19 +169,34 @@ class DashboardController extends Controller
             // 'reports' => $reportsQuery->get(),
             'reports' => $reportsWithScores,
             'evaluationPeriod' => $evaluationPeriod,
-            'years' => $evaluations->pluck('assignmentData.start_time')->map(fn($d) => Carbon::parse($d)->year)->unique()->sortDesc(),
+            'years' => $evaluations->pluck('assignmentData.start_time')->map(fn ($d) => Carbon::parse($d)->year)->unique()->sortDesc(),
         ]);
+    }
 
-        // return response()->json([
-        //     'totalParticipants' => $totalParticipants,
-        //     'averageScore' => $averageScore,
-        //     'departments' => $departments,
-        //     'statusCounts_chart' => $statusCounts,
-        //     'scatterData_chart' => $scatterData,
-        //     // 'reports' => $reportsQuery->get(),
-        //     'reports' => $reportsWithScores,
-        //     'evaluationPeriod' => $evaluationPeriod,
-        // ]);
+    public function admin(Request $request, $id)
+    {
+        $user = $request->user()->load('position', 'department');
+
+        $data = $this->reportDataService->getReportData($id);
+        $report = $data['report'];
+
+        // if (in_array($report->status, ['Assigned', 'Draft',
+        //     'Pending', 'Evaluator_draft', 'Director_assigned', 'Director_draft'])) {
+        //     abort(403, 'ไม่สามารถเข้าถึงหน้าประเมินนี้ได้ เนื่องจากสถานะไม่อนุญาต');
+        // }
+
+        $canEdit = in_array($report->status, []);
+        $readonly = ! $canEdit; // true if status is something else
+
+        if ($readonly && $request->query('readonly') != 1) {
+            return redirect()->route('admin.show', ['id' => $id, 'readonly' => 1]);
+        }
+
+        return view('dashboard.admin', array_merge($data, [
+            'id' => $id,
+            'user' => $user,
+            'readonly' => $readonly,
+        ]));
     }
 
     private function reportsWithScores($reports)

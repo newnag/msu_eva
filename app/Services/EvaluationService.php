@@ -3,14 +3,12 @@
 namespace App\Services;
 
 use App\Models\Reports;
-use App\Models\User;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class EvaluationService
 {
-     public function getAllReportsWithAssignments()
+    public function getAllReportsWithAssignments()
     {
         return Reports::with([
             'reportData',
@@ -24,7 +22,7 @@ class EvaluationService
     public function mapAssignments($reports, $user = null, $type = 'all')
     {
         return $reports->map(function ($report) use ($user, $type) {
-            if (!$report->assignments) {
+            if (! $report->assignments) {
                 return null;
             }
 
@@ -32,20 +30,20 @@ class EvaluationService
             $assignment->setRelation('report', $report);
 
             // Common info
-            $assignment->evaluateeName       = $assignment->evaluateeUser?->name ?? '-';
+            $assignment->evaluateeName = $assignment->evaluateeUser?->name ?? '-';
             $assignment->evaluateeDepartment = $assignment->evaluateeUser?->department?->department_name ?? '-';
-            $assignment->evaluateePosition   = $assignment->evaluateeUser?->position?->name ?? '-';
-            $assignment->evaluatorPosition   = $assignment->assignmentData?->evaluatorPosition?->name ?? '-';
+            $assignment->evaluateePosition = $assignment->evaluateeUser?->position?->name ?? '-';
+            $assignment->evaluatorPosition = $assignment->assignmentData?->evaluatorPosition?->name ?? '-';
             $assignment->evaluateeAssignedPosition = $assignment->assignmentData?->evaluateePosition?->name ?? '-';
             $assignment->setAttribute('evaluatorName', $assignment->getEvaluatorUsers()->pluck('name')->implode(', ') ?: '-');
             $assignment->startTime = $assignment->assignmentData?->start_time ?? null;
-            $assignment->endTime   = $assignment->assignmentData?->end_time ?? null;
+            $assignment->endTime = $assignment->assignmentData?->end_time ?? null;
 
             // Special cases for evaluator view
             if ($type === 'evaluator' && $user) {
-                $assignment->evaluatorName       = $user->name;
+                $assignment->evaluatorName = $user->name;
                 $assignment->evaluatorDepartment = $user->department?->name ?? '-';
-                $assignment->sameDepartment      = $assignment->evaluateeUser &&
+                $assignment->sameDepartment = $assignment->evaluateeUser &&
                     $assignment->evaluateeUser->department_id === $user->department_id;
             }
 
@@ -55,12 +53,12 @@ class EvaluationService
 
     public function filterEvaluations($evaluations, $filters)
     {
-        if (!empty($filters['search'])) {
+        if (! empty($filters['search'])) {
             $searchTerm = strtolower($filters['search']);
             $evaluations = $evaluations->filter(function ($assignment) use ($searchTerm) {
                 $evaluateeName = strtolower($assignment->evaluateeUser?->name ?? '');
                 $evaluatorName = strtolower($assignment->getEvaluatorUsers()->pluck('name')->implode(' '));
-                $reportTitle   = strtolower($assignment->report?->reportData?->report_title ?? '');
+                $reportTitle = strtolower($assignment->report?->reportData?->report_title ?? '');
 
                 return Str::contains($evaluateeName, $searchTerm)
                     || Str::contains($reportTitle, $searchTerm)
@@ -76,18 +74,20 @@ class EvaluationService
             });
         }
 
-        if (!empty($filters['start_time'])) {
+        if (! empty($filters['start_time'])) {
             $startDate = Carbon::parse($filters['start_time']);
             $evaluations = $evaluations->filter(function ($assignment) use ($startDate) {
                 $assignmentStart = optional($assignment->assignmentData)->start_time;
+
                 return $assignmentStart && Carbon::parse($assignmentStart)->gte($startDate);
             });
         }
 
-        if (!empty($filters['end_time'])) {
+        if (! empty($filters['end_time'])) {
             $endDate = Carbon::parse($filters['end_time']);
             $evaluations = $evaluations->filter(function ($assignment) use ($endDate) {
                 $assignmentEnd = optional($assignment->assignmentData)->end_time;
+
                 return $assignmentEnd && Carbon::parse($assignmentEnd)->lte($endDate);
             });
         }

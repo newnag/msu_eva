@@ -117,7 +117,8 @@ Route::middleware(['auth:sanctum', 'role:admin|ผู้บริหาร|ก�
 
 Route::middleware(['auth:sanctum', 'role:admin|ผู้บริหาร'])->group(function () {
     // Route::get('/evaluation/{id}', [DashboardEvaluateeController::class, 'evaluation'])->name('evaluation.show');
-    Route::get('/manager/{id}', [ManagerScoreController::class, 'manager'])->name('manager.show');
+    Route::get('/dashboard/{id}', [DashboardController::class, 'show'])->name('dashboard.show');
+    Route::get('/dashboard-data/{id}', [DashboardController::class, 'admin'])->name('admin.show');
 });
 
 Route::middleware(['auth:sanctum', 'role:admin|ผู้บริหาร|กรรมการ|ผู้ประเมิน'])->group(function () {
