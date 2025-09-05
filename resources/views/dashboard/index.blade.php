@@ -228,7 +228,7 @@
                         <h3 class="text-lg font-semibold text-gray-900 mb-4 sm:mb-0">ผลการประเมินรายบุคคล</h3>
                         <div class="flex flex-col sm:flex-row gap-3">
                             <x-export-button 
-                                :route="route('admin.export.reports', request()->query())"
+                                :route="route('export.reports', request()->query())"
                                 label="ส่งออกExcelทั้งหมด" />
                             <div class="relative">
                                 <input type="text" id="searchInput" placeholder="ค้นหาชื่อผู้รับการประเมิน"
@@ -366,7 +366,7 @@
                                     <td class="px-3 py-4 whitespace-nowrap">
                                         <div class="flex justify-center items-center">
                                             @if($status === 'Completed')
-                                                <a href="{{ route('single.reports.export', ['id' => $evaluation->report->id ?? 0]) }}"
+                                                <a href="{{ route('export.reports', ['id' => $evaluation->report->id ?? 0]) }}"
                                                 class="p-2 bg-green-400 hover:bg-green-500 text-white rounded-md transition duration-200"
                                                 title="ส่งออกรายงานผลการประเมินของ {{ $evaluateeName  ?? 'บุคคล' }}">
                                                     <i class="fas fa-file-export"></i>
