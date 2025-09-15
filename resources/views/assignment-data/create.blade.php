@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+    <!-- Success Message -->
     @if(session('success'))
     <div id="successMessage" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg z-[10000] transform transition-transform duration-300">
         <div class="flex items-center space-x-3">
@@ -26,154 +27,209 @@
         </div>
     @endif
 
-    <body class="bg-gray-50 min-h-screen py-8">
-        <div class="py-12 max-w-6xl mx-auto px-4">
-            <div class="bg-white shadow-sm rounded-lg p-6 mb-4">
-                <div class="bg-white shadow-sm rounded-lg mb-6">
-                    <form id="evaluation-form" action="{{ route('assignment-data.store') }}" method="POST">
-                        @csrf
-                        <h2 class="text-xl font-semibold text-gray-800 p-6 mb-4">กำหนดกรอบการประเมิน</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 border-b border-gray-200">
-                            <div>
-                                <label for="start_time"
-                                    class="block text-sm font-medium text-gray-700">วันเริ่มต้นประเมิน:</label>
-                                <input type="text" name="start_time" id="start_time"
-                                    class="mt-1 form-input-custom flatpickr-date" required>
-                            </div>
-                            <div>
-                                <label for="end_time"
-                                    class="block text-sm font-medium text-gray-700">วันสิ้นสุดประเมิน:</label>
-                                <input type="text" name="end_time" id="end_time"
-                                    class="mt-1 form-input-custom flatpickr-date" required>
-                            </div>
-                        </div>
+    <div class="bg-gray-50 min-h-screen py-2">
+      <div class="py-2 max-w-6xl mx-auto px-4">
+        <h1 class="text-xl md:text-2xl font-semibold text-black mb-4">จัดการรอบการประเมิน</h1>
+
+        <!-- ใช้ฟอร์มเดียวครอบทุกส่วน -->
+        <form id="evaluation-form" action="{{ route('assignment-data.store') }}" method="POST">
+          @csrf
+
+          <!-- 1. กำหนดกรอบการประเมิน -->
+          <div class="bg-white border border-gray-200 shadow-sm rounded-lg mb-6">
+            <div class="px-4 py-4 border-b">
+              <h2 class="text-xl font-semibold text-black mb-4">1. กำหนดกรอบการประเมิน</h2>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Start -->
+                <div>
+                  <label for="start_time" class="block text-base font-medium text-gray-800 mb-1">
+                    วันที่เริ่มต้นการประเมิน:
+                  </label>
+                  <div class="relative">
+                    <input type="text" name="start_time" id="start_time"
+                      class="form-input-custom flatpickr-date w-full pr-10"
+                      placeholder="วว/ดด/ปปปป" required>
+                    <span class="absolute inset-y-0 right-3 flex items-center text-gray-600 pointer-events-none">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                      </svg>
+                    </span>
+                  </div>
                 </div>
-                <h2 class="text-xl font-semibold text-gray-800 p-6 ">เกณฑ์การประเมิน</h2>
-                <div class="mb-4 p-6 border-b border-gray-200 p-6 border-b border-gray-200">
-                    <label for="report_id" class="block text-sm font-medium text-gray-700 mb-2">
+
+                <!-- End -->
+                <div>
+                  <label for="end_time" class="block text-base font-medium text-gray-800 mb-1">
+                    วันที่สิ้นสุดการประเมิน:
+                  </label>
+                  <div class="relative">
+                    <input type="text" name="end_time" id="end_time"
+                      class="form-input-custom flatpickr-date w-full pr-10"
+                      placeholder="วว/ดด/ปปปป" required>
+                    <span class="absolute inset-y-0 right-3 flex items-center text-gray-600 pointer-events-none">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. เลือกเกณฑ์การประเมิน -->
+          <div class="bg-white border border-gray-200 shadow-sm rounded-lg mb-6">
+            <div class="px-4 py-4 border-b border-gray-200">
+              <h2 class="text-xl font-semibold text-black mb-4">2. เลือกเกณฑ์การประเมิน</h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="col-span-2">
+                    <label for="report_data_id" class="block text-base font-medium text-gray-800 mb-1">
                         เกณฑ์การประเมิน :
                     </label>
-
+                <div class="relative">
                     <select id="report_data_id" name="report_data_id" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">-- กรุณาเลือกเกณฑ์การประเมิน --</option>
-                        @foreach ($report_data as $item)
-                            <option value="{{ $item->id }}">{{ $item->report_title }}</option>
-                        @endforeach
+                    class="appearance-none w-full bg-white text-gray-700 border border-gray-300 rounded-lg
+                            h-11 px-3 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600">
+                    <option value="">เลือกเกณฑ์การประเมิน</option>
+                    @foreach ($report_data as $item)
+                        <option value="{{ $item->id }}">{{ $item->report_title }}</option>
+                    @endforeach
                     </select>
 
-                    <h2 class="text-xl font-semibold text-gray-800 p-6 ">กำหนดผู้ประเมิน / ผู้รับการประเมิน</h2>
-                    <!-- ฟิลเตอร์หน่วยงาน -->
-                    <div class="mb-6 pb-6 border-b border-gray-200">
-                        <label for="department_filter" class="block text-sm font-medium text-gray-700 mb-2">
-                            ฟิลเตอร์ตามหน่วยงาน :
-                        </label>
-                        <select id="department_filter" name="department_filter"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                            <option value="all">แสดงทั้งหมด</option>
-                            @foreach ($departments as $department)
-                                <option value="{{ $department->id }}">{{ $department->department_name }} -
-                                    {{ $department->faculty }}</option>
-                            @endforeach
-                        </select>
-
-                        <p class="mt-2 text-xs text-gray-500">
-                            เลือกหน่วยงานเพื่อกรองรายชื่อผู้ประเมินและผู้รับการประเมินด้านล่าง
-                        </p>
-                        <div id="filter-summary" class="mt-2 p-2 bg-blue-50 rounded text-sm text-blue-700 hidden">
-                            <!-- แสดงสรุปการฟิลเตอร์ -->
-                        </div>
-                    </div>
-
-                    <div class="space-y-8">
-                        <!-- ผู้รับการประเมิน Section -->
-                        <div>
-                            <div class="flex items-center justify-between mb-4">
-                                <label class="block text-sm font-medium text-gray-700">
-                                    รายชื่อผู้รับการประเมิน :
-                                </label>
-                                <div class="text-sm text-gray-500">
-                                    <span id="evaluatees-available-count">0</span> คนที่แสดง จาก
-                                    <span id="evaluatees-total-count">0</span> คนทั้งหมด
-                                </div>
-                            </div>
-                            <select id="evaluatees" name="evaluatees[]" multiple required
-                                class="form-multi-select w-full focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                @foreach ($evaluatees as $user)
-                                    <option value="{{ $user->id }}"
-                                        data-department="{{ $user->department_id ?? 'none' }}">
-                                        {{ $user->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-
-                            <!-- Selected Display for Evaluatees -->
-                            <div class="mt-4 p-4 bg-gray-50 rounded-lg min-h-[60px]">
-                                <p class="text-sm font-medium text-gray-700 mb-2">
-                                    รายชื่อผู้รับการประเมินที่เลือก:
-                                    <span id="evaluatees-selected-count" class="text-blue-600 font-semibold">0</span> คน
-                                </p>
-                                <div id="selected-evaluatees" class="flex flex-col gap-2">
-                                    <span class="text-sm text-gray-500">ยังไม่ได้เลือกรายชื่อ</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ส่วนที่เกี่ยวกับ Evaluators -->
-                        <div>
-                            <div class="flex items-center justify-between mb-4">
-                                <label for="evaluators" class="block text-sm font-medium text-gray-700">
-                                    รายชื่อผู้ประเมิน :
-                                </label>
-                                <div class="text-sm text-gray-500">
-                                    <span id="evaluators-available-count">0</span> คนที่แสดง จาก
-                                    <span id="evaluators-total-count">0</span> คนทั้งหมด
-                                </div>
-                            </div>
-                            <select id="evaluators" name="evaluators[]" multiple required
-                                class="form-multi-select w-full focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                @foreach ($evaluators as $user)
-                                    <option value="{{ $user->id }}" data-department="{{ $user->department_id }}">
-                                        {{ $user->name }} - {{ $user->department->department_name ?? '' }}
-                                    </option>
-                                @endforeach
-                            </select>
-
-                            <!-- Selected Display for Evaluators -->
-                            <div class="mt-4 p-4 bg-gray-50 rounded-lg min-h-[60px]">
-                                <p class="text-sm font-medium text-gray-700 mb-2">
-                                    รายชื่อผู้ประเมินที่เลือก:
-                                    <span id="evaluators-selected-count" class="text-blue-600 font-semibold">0</span> คน
-                                </p>
-                                <div id="selected-evaluators" class="flex flex-col gap-2">
-                                    <span class="text-sm text-gray-500">ยังไม่ได้เลือกรายชื่อ</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Form Actions -->
-                    <div class="flex justify-between items-center mt-8">
-                        <div class="text-sm text-gray-500">
-                            <span class="font-medium">สรุป:</span>
-                            ผู้รับการประเมิน <span id="total-evaluatees" class="text-blue-600 font-semibold">0</span>
-                            คน,
-                            ผู้ประเมิน <span id="total-evaluators" class="text-blue-600 font-semibold">0</span> คน
-                        </div>
-                        <div class="flex space-x-3">
-                            <button type="button" id="reset-btn"
-                                class="px-6 py-2 bg-gray-300 text-gray-800 font-semibold rounded-md hover:bg-gray-400 transition-colors">
-                                ล้างค่า
-                            </button>
-                            <button type="submit"
-                                class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                                บันทึก
-                            </button>
-                        </div>
-                    </div>
-                    </form>
+                    <!-- custom arrow -->
+                    <span class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/>
+                    </svg>
+                    </span>
                 </div>
+                </div>
+
+              </div>
             </div>
+          </div>
+
+          <!-- 3. กำหนดผู้ประเมิน / ผู้รับการประเมิน -->
+          <div class="bg-white border border-gray-200 shadow-sm rounded-lg mb-6">
+            <div class="px-4 py-4 border-b border-gray-200">
+              <h2 class="text-xl font-semibold text-black mb-4">3. กำหนดผู้ประเมิน / ผู้รับการประเมิน</h2>
+              <!-- ฟิลเตอร์หน่วยงาน -->
+              <div class="mb-6 pb-6 border-b border-gray-200">
+                <label for="department_filter" class="block text-base font-medium text-gray-800 mb-2">
+                  เลือกหน่วยงาน :
+                </label>
+                <div class="relative">
+                  <select id="department_filter" name="department_filter"
+                    class="appearance-none [-webkit-appearance:none] w-full bg-white text-gray-700
+                          border border-gray-300 rounded-lg h-11 px-3 pr-10
+                          focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600">
+                    <option value="all">แสดงทั้งหมด</option>
+                    @foreach ($departments as $department)
+                      <option value="{{ $department->id }}">
+                        {{ $department->department_name }} - {{ $department->faculty }}
+                      </option>
+                    @endforeach
+                  </select>
+
+                  <!-- custom arrow -->
+                  <span class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/>
+                    </svg>
+                  </span>
+                </div>
+                <p class="mt-2 text-sm text-gray-500">
+                  เลือกหน่วยงานเพื่อกรองรายชื่อผู้ประเมินและผู้รับการประเมินด้านล่าง
+                </p>
+                <div id="filter-summary" class="mt-2 p-2 bg-blue-50 rounded text-sm text-blue-700 hidden"></div>
+              </div>
+
+              <div class="space-y-8">
+                <!-- ผู้รับการประเมิน -->
+                <div>
+                  <div class="flex items-center justify-between mb-4">
+                    <label class="block text-base font-medium text-gray-800">รายชื่อผู้รับการประเมิน :</label>
+                    <div class="text-sm text-gray-500">
+                      <span id="evaluatees-available-count">0</span> คนที่แสดง จาก
+                      <span id="evaluatees-total-count">0</span> คนทั้งหมด
+                    </div>
+                  </div>
+                  <select id="evaluatees" name="evaluatees[]" multiple required
+                    class="form-multi-select w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600">
+                    @foreach ($evaluatees as $user)
+                      <option value="{{ $user->id }}" data-department="{{ $user->department_id ?? 'none' }}">
+                        {{ $user->name }}
+                      </option>
+                    @endforeach
+                  </select>
+
+                  <div class="mt-4 p-4 bg-gray-50 rounded-lg min-h-[60px]">
+                    <p class="text-base font-medium text-gray-800 mb-2">
+                      รายชื่อผู้รับการประเมินที่เลือก:
+                      <span id="evaluatees-selected-count" class="text-blue-600 font-semibold">0</span> คน
+                    </p>
+                    <div id="selected-evaluatees" class="flex flex-col gap-2">
+                      <span class="text-sm text-gray-500">ยังไม่ได้เลือกรายชื่อ</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ผู้ประเมิน -->
+                <div>
+                  <div class="flex items-center justify-between mb-4">
+                    <label for="evaluators" class="block text-base font-medium text-gray-800">รายชื่อผู้ประเมิน :</label>
+                    <div class="text-sm text-gray-500">
+                      <span id="evaluators-available-count">0</span> คนที่แสดง จาก
+                      <span id="evaluators-total-count">0</span> คนทั้งหมด
+                    </div>
+                  </div>
+                  <select id="evaluators" name="evaluators[]" multiple required
+                    class="form-multi-select w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600">
+                    @foreach ($evaluators as $user)
+                      <option value="{{ $user->id }}" data-department="{{ $user->department_id }}">
+                        {{ $user->name }} - {{ $user->department->department_name ?? '' }}
+                      </option>
+                    @endforeach
+                  </select>
+
+                  <div class="mt-4 p-4 bg-gray-50 rounded-lg min-h-[60px]">
+                    <p class="text-base font-medium text-gray-800 mb-2">
+                      รายชื่อผู้ประเมินที่เลือก:
+                      <span id="evaluators-selected-count" class="text-blue-600 font-semibold">0</span> คน
+                    </p>
+                    <div id="selected-evaluators" class="flex flex-col gap-2">
+                      <span class="text-sm text-gray-500">ยังไม่ได้เลือกรายชื่อ</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action bar -->
+            <div class="flex justify-between items-center px-4 py-4">
+              <div class="text-sm text-gray-600">
+                <span class="font-medium">สรุป:</span>
+                ผู้รับการประเมิน <span id="total-evaluatees" class="text-blue-600 font-semibold">0</span> คน,
+                ผู้ประเมิน <span id="total-evaluators" class="text-blue-600 font-semibold">0</span> คน
+              </div>
+              <div class="flex space-x-3">
+                <button type="button" id="reset-btn"
+                  class="px-6 py-2 bg-gray-300 text-gray-800 font-semibold rounded-md hover:bg-gray-400 transition-colors">
+                  ล้างค่า
+                </button>
+                <button type="submit"
+                  class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                  บันทึก
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
 
             <script>
                 $(document).ready(function() {
