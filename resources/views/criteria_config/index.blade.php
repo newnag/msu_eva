@@ -139,7 +139,7 @@
 
             criteriaVersions.forEach((item) => {
                 const card = document.createElement('div');
-                card.className = 'bg-white rounded-xl drop-shadow-md border border-gray-100 p-2 flex flex-col h-72';
+                card.className = 'bg-white rounded-md drop-shadow-md border border-gray-100 p-2 flex flex-col h-72';
 
                 const title = (item.version_name || '').toString().trim();
                 const createdAt = toThaiDate(item.created_at);
