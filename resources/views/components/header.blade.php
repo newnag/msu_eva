@@ -12,7 +12,7 @@
             @endif
             {{ $title }}
         </h2>
-        <p class="text-gray-500 text-lg font-normal">{{ $text }}</p>
+        <p class="text-gray-700 text-lg font-normal">{{ $text }}</p>
     </div>
 
     @isset($action)

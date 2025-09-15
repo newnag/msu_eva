@@ -446,7 +446,7 @@ class DashboardController extends Controller
             return Carbon::parse($startDate)->format('M d, Y').' - '.Carbon::parse($endDate)->format('M d, Y');
         }
 
-        return 'All Periods';
+        return 'ทุกรอบการประเมิน';
     }
 
     public function show($id)
