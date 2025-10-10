@@ -14,19 +14,11 @@
         </h2>
 
         <div class="d-flex gap-2 align-items-center flex-wrap">
-            <x-button 
-                type="secondary" 
-                text="นำเข้ารายชื่อเจ้าหน้าที่" 
-                onclick="openImportModal(this)" 
-                data-action="{{ route('users.import') }}"
-                icon="fas fa-file-import" />
+            <x-button type="secondary" text="นำเข้ารายชื่อเจ้าหน้าที่" onclick="openImportModal(this)"
+                data-action="{{ route('users.import') }}" icon="fas fa-file-import" />
 
-            <x-button 
-                type="primary" 
-                text="เพิ่มเจ้าหน้าที่" 
-                onclick="openCreateModal(this)" 
-                data-action="{{ route('users.store') }}"
-                icon="fas fa-user-plus" />
+            <x-button type="primary" text="เพิ่มเจ้าหน้าที่" onclick="openCreateModal(this)"
+                data-action="{{ route('users.store') }}" icon="fas fa-user-plus" />
         </div>
 
         @include('user.management.user-form-modal')
@@ -36,30 +28,15 @@
     <div class="flex flex-wrap gap-4 mb-4 justify-between">
         <form method="GET" class="flex flex-wrap gap-4 items-end">
             <div class="flex items-center gap-2">
-                
-                <x-button 
-                    type="primary" 
-                    text="รีเซ็ตตัวกรอง"
-                    href="{{ route('users.index') }}" />
+
+                <x-button type="primary" text="รีเซ็ตตัวกรอง" href="{{ route('users.index') }}" />
             </div>
 
-            <x-filter
-                name="department_id"
-                label="สาขา"
-                :options="$departments->pluck('department_name', 'id')->toArray()"
-            />
+            <x-filter name="department_id" label="สาขา" :options="$departments->pluck('department_name', 'id')->toArray()" />
 
-            <x-filter
-                name="personnel_type"
-                label="ประเภทบุคลากร"
-                :options="$personnelTypes"
-            />
-            
-            <x-filter
-                name="position_id"
-                label="ตำแหน่งงาน"
-                :options="$positions->pluck('name', 'id')->toArray()"
-            />
+            <x-filter name="personnel_type" label="ประเภทบุคลากร" :options="$personnelTypes" />
+
+            <x-filter name="position_id" label="ตำแหน่งงาน" :options="$positions->pluck('name', 'id')->toArray()" />
         </form>
 
         <x-search-bar />
@@ -68,21 +45,25 @@
     <div class="mt-2 overflow-hidden rounded-md border border-gray-200 bg-white drop-shadow-sm">
         <div class="overflow-x-auto">
             <table class="min-w-full text-sm md:text-base">
-                <thead class="bg-gray-50 text-gray-700 sticky top-0 z-10">
-                    <tr class="border-b border-gray-200">
-                        <th class="py-3 px-6 text-left font-medium">ลำดับ</th>
-                        <th class="py-3 px-6 text-left font-medium">ข้อมูลพนักงาน</th>
-                        <th class="py-3 px-6 text-left font-medium">รหัสพนักงาน</th>
-                        <th class="py-3 px-6 text-left font-medium">ตำแหน่งงาน</th>
-                        <th class="py-3 px-6 text-left font-medium">ประเภทบุคลากร</th>
-                        <th class="py-3 px-6 text-left font-medium">บทบาท</th>
-                        <th class="py-3 px-6 text-left font-medium">ติดต่อ</th>
-                        <th class="py-3 px-6 text-left md:text-center font-medium">การดำเนินการ</th>
+                <thead class="bg-gray-50 text-black sticky top-0 z-10
+                 [&_th]:py-3 [&_th]:px-6 [&_th]:text-left  [&_th]:text-base [&_th]:font-medium
+                 [&_tr]:border-b [&_tr]:border-gray-200
+                 [&_th:last-child]:md:text-center">
+                    <tr>
+                        <th>ลำดับ</th>
+                        <th>ข้อมูลพนักงาน</th>
+                        <th>รหัสพนักงาน</th>
+                        <th>ตำแหน่งงาน</th>
+                        <th>ประเภทบุคลากร</th>
+                        <th>บทบาท</th>
+                        <th>ติดต่อ</th>
+                        <th>การดำเนินการ</th>
                     </tr>
                 </thead>
+
                 <tbody class="divide-y divide-gray-100">
                     @forelse ($users as $index => $user)
-                        <x-user-table :index="$users->firstItem() + $index" :employee="[
+                                <x-user-table :index="$users->firstItem() + $index" :employee="[
                             'id' => $user->id,
                             'prefix' => $user->prefix,
                             'name' => $user->name,
@@ -119,4 +100,3 @@
         </div>
     </div>
 @endsection
-
