@@ -67,10 +67,23 @@
 
     <td>
         <div class="flex items-center justify-start gap-3">
-            <!-- ปุ่มแก้ไข -->
-            <x-button type="outline-primary" text="แก้ไข" class="text-sm" icon="fas fa-edit"
-                onclick='openEditModal(@js($editPayload))' />
-
+             <!-- ปุ่มแก้ไข -->
+             <x-button type="outline-primary" text="แก้ไข" class="text-sm" icon="fas fa-edit"
+                onclick='openEditModal({ 
+                    id: {{ $employee["id"] }},
+                    prefix: "{{ $employee["prefix"] ?? "" }}",
+                    name: "{{ $employee["name"] }}",
+                    employee_id: "{{ $employee["code"] }}",
+                    email: "{{ $employee["email"] ?? "" }}",
+                    phone: "{{ $employee["contact"] }}",
+                    personnel_type: "{{ $employee["type"] }}",
+                    bio: "{{ $employee["bio"] ?? "" }}",
+                    status: "{{ $employee["status"] ?? "active" }}",
+                    position_id: {{ $employee["position_id"] ?? "null" }},
+                    department_id: {{ $employee["department_id"] ?? "null" }},
+                    roles: [{ name: {!! json_encode($employee["role"] ?? "") !!} }]
+                })'
+            />
             <!-- ปุ่มลบ -->
             <x-button type="outline-danger" text="ลบ" icon="fas fa-trash-alt"
                 onclick="confirmDelete({{ $employee['id'] }})" />
