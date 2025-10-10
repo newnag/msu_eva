@@ -63,7 +63,9 @@
             <div class="flex flex-row justify-between space-y-3">
                 <!-- Header -->
                 <div class="animate-fadeIn">
-                    <h1 class="font-semibold text-3xl text-black mb-2">ภาพรวมการประเมินผล</h1>
+                    <x-ui.heading class="mb-2">
+                        ภาพรวมการประเมินผล
+                    </x-ui.heading>
                 </div>
                 <!-- Filter Summary -->
                 <div class="mb-6">

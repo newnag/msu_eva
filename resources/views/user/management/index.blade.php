@@ -9,9 +9,7 @@
 
 @section('content')
     <div class="d-flex flex-column flex-md-row justify-between items-start md:items-center mb-4 gap-3">
-        <h2 class="text-xl md:text-2xl font-semibold text-gray-800">
-            รายชื่อเจ้าหน้าที่ทั้งหมด ({{ $users->total() }} คน)
-        </h2>
+        <x-ui.heading> รายชื่อเจ้าหน้าที่ทั้งหมด ({{ $users->total() }} คน) </x-ui.heading>
 
         <div class="d-flex gap-2 align-items-center flex-wrap">
             <x-button type="secondary" text="นำเข้ารายชื่อเจ้าหน้าที่" onclick="openImportModal(this)"

@@ -5,9 +5,7 @@
         <div class="mx-auto sm:px-6 lg:px-8">
             <!-- Header + Toolbar -->
             <div class="flex justify-between items-center mb-1">
-                <h2 class="font-semibold text-2xl text-black">
-                    จัดการเกณฑ์การประเมิน
-                </h2>
+                <x-ui.heading> จัดการเกณฑ์การประเมิน</x-ui.heading>
                 <div class="flex items-center gap-3 w-full md:w-auto">
                     <div class="relative flex-1 md:flex-none">
                         <input id="search-input" type="text" placeholder="ค้นหาเกณฑ์การประเมิน"

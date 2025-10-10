@@ -61,7 +61,7 @@
 @endphp
 
 <div class="bg-white rounded-lg p-6">
-    <h3 class="text-lg font-semibold text-gray-800 mb-4">ภาพรวมสถานะการประเมิน</h3>
+    <x-ui.heading class="mb-4">ภาพรวมการประเมินผล</x-ui.heading>
 
     <!-- Status Badges -->
     @php
