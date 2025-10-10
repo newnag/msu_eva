@@ -113,7 +113,10 @@
             const tr = document.createElement('tr');
             tr.className = 'group hover:bg-gray-50 cursor-pointer';
             tr.setAttribute('data-title', title.toLowerCase());
-            tr.addEventListener('click', () => { window.location.href = showUrl; });
+            tr.addEventListener('click', () => {
+                if (e.target.closest('button, a, .action-stop')) return;
+                 window.location.href = showUrl; 
+                });
 
             tr.innerHTML = `
                 <td class="px-4 py-3 text-black text-lg text-center font-normal">${index + 1}</td>
@@ -137,9 +140,9 @@
                         </a>
 
                         <!-- ปุ่มลบ -->
-                        <button type="button"
-                            class="action-stop inline-flex items-center gap-1.5 rounded-md border !border-red-500 text-red-500 hover:bg-red-50 font-medium text-sm px-3 py-1.5 shadow-sm"
-                            onclick="showDeleteModal(${item.id}, this)">
+                         <button type="button"
+                            onclick="event.stopPropagation(); showDeleteModal(${item.id}, this)"
+                            class="action-stop inline-flex items-center gap-1.5 rounded-md border !border-red-500 text-red-500 hover:bg-red-50 font-medium text-sm px-3 py-1.5 shadow-sm">
                             <i class="fas fa-trash-alt"></i><span>ลบ</span>
                         </button>
                     </div>
@@ -150,12 +153,7 @@
         });
     }
 
-    // กัน event bubbling: คลิกปุ่มแล้วไม่พาไปหน้า show
-    document.addEventListener('click', (e) => {
-        if (e.target.closest('.action-stop')) {
-            e.stopPropagation();
-        }
-    }, true);
+  
 
     // =============================== Delete =================================== //
     let deleteModal = null, deleteTargetId = null, deleteTargetBtn = null;
