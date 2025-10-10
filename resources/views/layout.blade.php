@@ -17,10 +17,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        * {
-            font-family: 'Kanit', sans-serif;
-        }
-
         body {
             background: #ffffff;
             min-height: 100vh;

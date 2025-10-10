@@ -549,10 +549,6 @@
             </script>
     </body>
     <style>
-        body {
-            font-family: 'Sarabun', sans-serif;
-        }
-
         .card-checkbox {
             transition: all 0.3s ease;
             cursor: pointer;

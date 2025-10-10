@@ -2,12 +2,6 @@
 @section('title', 'จัดการข้อมูลแผนก')
 @section('content')
     <style>
-        body {
-            background-color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #333333;
-        }
-
         .table-container {
             background: #ffffff;
             border: 1px solid #e0e0e0;

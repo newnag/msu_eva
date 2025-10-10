@@ -271,9 +271,6 @@
         }
 
         body {
-            font-family: 'Sarabun', Arial, sans-serif;
-            background-color: #ffffff;
-            color: #374151;
             line-height: 1.6;
         }
 

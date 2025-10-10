@@ -112,9 +112,6 @@
         }
 
         body {
-            background-color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #333333;
         }
 
         .dashboard-container {
