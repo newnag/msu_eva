@@ -14,3 +14,11 @@
 <{{ $tag }} {{ $attributes->merge(['class' => $classes]) }}>
     {{ $slot }}
 </{{ $tag }}>
+
+{{-- <x-ui.heading>จัดการเกณฑ์การประเมิน</x-ui.heading> --}}
+
+{{-- 
+<x-ui.heading level="h1" size="text-3xl" weight="font-semibold" class="mb-2">
+    ภาพรวมการประเมินผล
+</x-ui.heading>
+--}}
