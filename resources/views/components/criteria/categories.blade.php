@@ -115,17 +115,13 @@
         </div>
 
         <button type="button" class="add_evaluation_list_btn mt-6 text-sm px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
+            <x-icon.plus class="h-5 w-5 mr-2" />
             เพิ่มรายการประเมิน
         </button>
     </div>
 
     <!-- END Category Block -->
     <button type="button" id="add_category_btn" class="my-6 px-5 py-2.5 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition flex items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-        </svg>
+        <x-icon.plus class="h-6 w-6 mr-2" />
         เพิ่มหมวดหมู่การประเมิน
     </button>

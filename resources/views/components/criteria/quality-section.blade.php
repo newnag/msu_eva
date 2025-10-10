@@ -23,11 +23,7 @@
 
     <button type="button"
             class="add_qual_criteria_btn mt-2 text-sm px-3 py-1.5 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition flex items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
-             viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-        </svg>
+            <x-icon.plus class="h-4 w-4 mr-2" />
         เพิ่มเกณฑ์คุณภาพหลัก
     </button>
 
@@ -126,11 +122,7 @@
 
         <button type="button"
                 class="add_qual_sub_criteria_btn text-sm px-3 py-1.5 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 transition flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
-                 viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
+                <x-icon.plus class="h-4 w-4 mr-2" />
             เพิ่มคุณภาพย่อย
         </button>
     </div>
