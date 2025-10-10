@@ -7,7 +7,7 @@
 ])
 
 @php
-    $th = 'px-4 py-3 text-base font-semibold text-black';
+    $th = 'px-4 py-3 text-lg font-semibold text-black';
 @endphp
 
 <div class="bg-white rounded-md shadow-sm border border-gray-100">
@@ -116,17 +116,17 @@
             tr.addEventListener('click', () => { window.location.href = showUrl; });
 
             tr.innerHTML = `
-                <td class="px-4 py-3 text-black text-base text-center">${index + 1}</td>
+                <td class="px-4 py-3 text-black text-lg text-center font-normal">${index + 1}</td>
 
-                <td class="px-4 py-3 text-black text-base">
+                <td class="px-4 py-3 text-black text-lg font-normal">
                     <a href="${showUrl}" class="decoration-transparent group-hover:decoration-inherit">
                         ${title || 'ไม่มีการระบุชื่อเวอร์ชัน'}
                     </a>
                 </td>
 
-                <td class="px-4 py-3 text-black text-base">${creatorName}</td>
-                <td class="px-4 py-3 text-black text-base">${createdAt}</td>
-                <td class="px-4 py-3 text-black text-base">${updatedAt}</td>
+                <td class="px-4 py-3 text-black text-lg font-normal">${creatorName}</td>
+                <td class="px-4 py-3 text-black text-lg font-normal">${createdAt}</td>
+                <td class="px-4 py-3 text-black text-lg font-normal">${updatedAt}</td>
 
                 <td class="px-4 py-2">
                     <div class="flex items-center justify-center gap-3">
