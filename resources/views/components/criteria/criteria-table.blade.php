@@ -1,25 +1,29 @@
 @props([
     'indexRoute',
-    'editUrlBase' => '/criteria-config',
+    'editUrlBase'   => '/criteria-config',
     'deleteUrlBase' => '/report-version',
+    'showUrlBase'   => '/criteria-config',
     'csrfToken',
 ])
+
+@php
+    $th = 'px-4 py-3 text-base font-semibold text-black';
+@endphp
 
 <div class="bg-white rounded-md shadow-sm border border-gray-100">
     <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200 rounded-t-md">
-            <thead class="bg-gray-50 r">
-            <tr class="text-left text-base text-black font-medium">
-                    <td scope="col" class="px-4 py-3 w-[80px] text-center">ลำดับ</td>
-                    <td scope="col" class="px-4 py-3 w-[30%]">ชื่อเวอร์ชันเกณณ์การประเมิน</td>
-                    <td scope="col" class="px-4 py-3">สร้างโดย</td>
-                    <td scope="col" class="px-4 py-3">วันที่สร้าง</td>
-                    <td scope="col" class="px-4 py-3">วันที่แก้ไข</td>
-                    <td scope="col" class="px-4 py-3 w-[220px] text-center">การดำเนินการ</td>
-                </tr>
-            </thead>
+        <thead class="bg-gray-50">
+            <tr>
+                <th scope="col" class="{{ $th }} w-[80px] text-center">ลำดับ</th>
+                <th scope="col" class="{{ $th }} w-[30%]">ชื่อเวอร์ชันเกณฑ์การประเมิน</th>
+                <th scope="col" class="{{ $th }}">สร้างโดย</th>
+                <th scope="col" class="{{ $th }}">วันที่สร้าง</th>
+                <th scope="col" class="{{ $th }}">วันที่แก้ไข</th>
+                <th scope="col" class="{{ $th }} w-[220px] text-center">การดำเนินการ</th>
+            </tr>
+        </thead>
             <tbody id="criteria-table-body" class="divide-y divide-gray-100">
-                <!-- Loading -->
                 <tr id="criteria-loading">
                     <td colspan="6" class="px-4 py-8 text-center text-gray-500">Loading...</td>
                 </tr>
@@ -102,28 +106,40 @@
             const updatedAt = toThaiDate(item.updated_at);
             const creatorName = (item.created_by && item.created_by.name) ? item.created_by.name : '-';
 
-            const tr = document.createElement('tr');
-            tr.className = 'hover:bg-gray-50';
-            tr.setAttribute('data-title', title.toLowerCase());
-
+            const showUrl = `${@json($showUrlBase)}/${item.id}`;
             const editUrl = `${@json($editUrlBase)}/${item.id}/edit`;
 
-            // Render row
+            // สร้างแถวที่ "ทั้งแถวคลิกเพื่อดูรายละเอียด"
+            const tr = document.createElement('tr');
+            tr.className = 'group hover:bg-gray-50 cursor-pointer';
+            tr.setAttribute('data-title', title.toLowerCase());
+            tr.addEventListener('click', () => { window.location.href = showUrl; });
+
             tr.innerHTML = `
-                <td class="px-4 py-3 text-black text-base font-normal text-center">${index + 1}</td>
-                <td class="px-4 py-3 text-black text-base font-normal">${title || 'ไม่มีการระบุชื่อเวอร์ชัน'}</td>
-                <td class="px-4 py-3 text-black text-base font-normal">${creatorName}</td>
-                <td class="px-4 py-3 text-black text-base font-normal">${createdAt}</td>
-                <td class="px-4 py-3 text-black text-base font-normal">${updatedAt}</td>
-                <td class="px-4 py-2 ">
-                    <div class="flex items-center gap-3">
+                <td class="px-4 py-3 text-black text-base text-center">${index + 1}</td>
+
+                <td class="px-4 py-3 text-black text-base">
+                    <a href="${showUrl}" class="decoration-transparent group-hover:decoration-inherit">
+                        ${title || 'ไม่มีการระบุชื่อเวอร์ชัน'}
+                    </a>
+                </td>
+
+                <td class="px-4 py-3 text-black text-base">${creatorName}</td>
+                <td class="px-4 py-3 text-black text-base">${createdAt}</td>
+                <td class="px-4 py-3 text-black text-base">${updatedAt}</td>
+
+                <td class="px-4 py-2">
+                    <div class="flex items-center justify-center gap-3">
+                        <!-- ปุ่มแก้ไข -->
                         <a href="${editUrl}"
-                           class="inline-flex items-center gap-1.5 rounded-md border !border-blue-600 text-blue-600 hover:bg-blue-50 font-medium text-sm px-3 py-1.5 shadow-sm">
+                           class="action-stop inline-flex items-center gap-1.5 rounded-md border !border-blue-600 text-blue-600 hover:bg-blue-50 font-medium text-sm px-3 py-1.5 shadow-sm">
                             <i class="fas fa-edit"></i><span>แก้ไข</span>
                         </a>
+
+                        <!-- ปุ่มลบ -->
                         <button type="button"
-                            onclick="showDeleteModal(${item.id}, this)"
-                            class="inline-flex items-center gap-1.5 rounded-md border !border-red-500 text-red-500 hover:bg-red-50 font-medium text-sm px-3 py-1.5 shadow-sm">
+                            class="action-stop inline-flex items-center gap-1.5 rounded-md border !border-red-500 text-red-500 hover:bg-red-50 font-medium text-sm px-3 py-1.5 shadow-sm"
+                            onclick="showDeleteModal(${item.id}, this)">
                             <i class="fas fa-trash-alt"></i><span>ลบ</span>
                         </button>
                     </div>
@@ -133,6 +149,13 @@
             tbody.appendChild(tr);
         });
     }
+
+    // กัน event bubbling: คลิกปุ่มแล้วไม่พาไปหน้า show
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('.action-stop')) {
+            e.stopPropagation();
+        }
+    }, true);
 
     // =============================== Delete =================================== //
     let deleteModal = null, deleteTargetId = null, deleteTargetBtn = null;
@@ -209,10 +232,9 @@
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('success')) showAlert('อัปเดตข้อมูลสำเร็จ', 'success');
 
-        // โหลดรายการ
         fetchCriteriaVersions();
 
-        // Hook ค้นหาฝั่ง client
+        // ค้นหา client-side
         const searchInput = document.getElementById('search-input');
         const tbody = document.getElementById('criteria-table-body');
         if (searchInput && tbody) {

@@ -27,6 +27,10 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::get('/criteria-evaluators', function () {
         return view('criteria_config.evaluators');
     })->name('criteria_config.evaluators');
+    Route::get('/criteria-config/{id}', function ($id) {
+        return view('criteria_config.show', ['id' => $id]);
+    })->name('criteria_config.show');
+
 });
 
 Route::prefix('reports')->name('reports.')->group(function () {
