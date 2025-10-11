@@ -1,11 +1,11 @@
 <div id="categories_container" class="space-y-8">
-    <h2 class="font-bold text-2xl text-gray-900 mb-4 flex items-center">
-        <span class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3">2</span>
+    <h2 class="flex items-center mb-6 text-2xl text-black font-bold">
+        <span class="mr-3 font-bold text-2xl text-white rounded-full w-8 h-8 bg-blue-600 flex items-center justify-center ">2</span>
         หมวดหมู่การประเมิน
     </h2>
 
     <!-- Category Block -->
-    <div class="category_block bg-white p-8 rounded-xl shadow-lg border-l-4 border-blue-600 hover:shadow-xl transition-shadow duration-300">
+    <div class="category_block bg-white p-8 rounded-lg drop-shadow-md border-l-4 border-blue-600 hover:shadow-xl transition-shadow duration-300">
         <div class="flex justify-between items-center mb-6">
             <h3 class="font-bold text-xl text-gray-900">หมวดหมู่การประเมิน</h3>
             <div class="flex space-x-3">

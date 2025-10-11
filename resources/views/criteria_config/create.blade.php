@@ -1,19 +1,29 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="py-4 bg-gradient-to-r from-blue-50 to-indigo-50 min-h-screen">
+    <div class="py-2 min-h-screen">
+        <!-- Breadcrumb
+         <div>
+         <nav class="text-base text-gray-600 mb-3">
+            <a href="{{ route('criteria_config.index') }}" class="hover:text-blue-600">จัดการโครงสร้างเกณฑ์</a>
+            <span class="mx-2">›</span>
+            <span class="text-gray-800 font-normal">สร้างเกณฑ์ใหม่</span>
+            </nav>
+         </div>  -->
+       
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="mb-10">
+            <div>
                 <x-ui.heading level="h1" size="text-3xl" class="mb-2">
                 สร้างเกณฑ์การประเมินใหม่
                 </x-ui.heading>
 
-                <p class="text-gray-600 text-lg">กรุณากรอกข้อมูลเกณฑ์การประเมินให้ครบถ้วนเพื่อสร้างเกณฑ์ที่สมบูรณ์</p>
+                <p class="text-gray-600 text-lg text-normal">กรอกข้อมูลด้านล่างให้ครบเพื่อสร้างเกณฑ์การประเมินใหม่</p>
             </div>
 
             <form id="jsonForm" action="{{ route('report-structure.store') }}" method="POST" class="space-y-8" novalidate>
                 @csrf
                 <!-- Assessment info -->
+                <div class="bg-white p-8 rounded-lg drop-shadow-md hover:shadow-xl transition-shadow duration-300">
                 <x-criteria.assessment-info
                     :version-name="old('version_name')"
                     :report-title="old('report_title')"
@@ -21,6 +31,7 @@
                     :assessment-type="old('assessment_type')"
                     :comment="old('comment')"
                 />
+                </div>
 
                 <!-- Categories -->
                 <x-criteria.categories />

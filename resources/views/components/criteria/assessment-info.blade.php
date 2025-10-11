@@ -12,9 +12,9 @@
 'comment' => '',
 ])
 
-<div {{ $attributes->merge(['class' => 'report_datas_block bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300']) }}>
-  <h2 class="font-bold text-2xl text-black mb-6 flex items-center">
-    <span class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3">1</span>
+<div {{ $attributes->merge(['class' => 'report_datas_block']) }}>
+  <h2 class="flex items-center mb-6 text-2xl text-black font-bold">
+    <span class="mr-3 font-bold text-2xl text-white rounded-full w-8 h-8 bg-blue-600 flex items-center justify-center ">1</span>
     ข้อมูลเกณฑ์การประเมิน
   </h2>
 
