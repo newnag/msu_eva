@@ -21,7 +21,7 @@ class ReportStructureController extends Controller
     // Get all criteria versions
     public function index()
     {
-        $criteriaVersions = CriteriaVersion::with('createdByUser')->get();
+        $criteriaVersions = CriteriaVersion::with('createdByUser' , 'latestReportData')->get();
         // Map to include user name
         $result = $criteriaVersions->map(function ($item) {
             $arr = $item->toArray();
@@ -30,6 +30,8 @@ class ReportStructureController extends Controller
                 'name' => $item->createdByUser->name,
             ] : null;
             $arr['created_by_name'] = $item->createdByUser ? $item->createdByUser->name : null;
+
+            $arr['assessment_type'] = optional($item->latestReportData)->assessment_type;
 
             return $arr;
         });

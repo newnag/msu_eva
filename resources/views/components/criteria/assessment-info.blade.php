@@ -37,8 +37,8 @@
         <select id="assessment_type" name="assessment_type" required
                 class="assessment_type w-full text-base pr-10 appearance-none px-3 py-2">
           <option value="" disabled selected hidden>-- เลือกประเภทการประเมิน --</option>
-          <option value="กลุ่มวิชาการ" {{ old('assessment_type', $assessmentType) === 'กลุ่มวิชาการ' ? 'selected' : '' }}>กลุ่มวิชาการ</option>
-          <option value="กลุ่มสนับสนุน" {{ old('assessment_type', $assessmentType) === 'กลุ่มสนับสนุน' ? 'selected' : '' }}>กลุ่มสนับสนุน</option>
+          <option value="วิชาการ" {{ old('assessment_type', $assessmentType) === 'วิชาการ' ? 'selected' : '' }}>วิชาการ</option>
+          <option value="สนับสนุน" {{ old('assessment_type', $assessmentType) === 'สนับสนุน' ? 'selected' : '' }}>สนับสนุน</option>
         </select>
 
         <span class="pointer-events-none absolute inset-y-0 right-3 flex items-center">

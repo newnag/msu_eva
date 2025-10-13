@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+
 
 class CriteriaVersion extends Model
 {
@@ -56,5 +58,10 @@ class CriteriaVersion extends Model
     public function evaluationLists()
     {
         return $this->hasMany(EvaluationList::class, 'criteria_version_id');
+    }
+
+    public function latestReportData(): HasOne
+    {
+        return $this->hasOne(ReportData::class)->latestOfMany();
     }
 }
