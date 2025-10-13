@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="py-3">
+    <div class="py-4">
         <div class="mx-auto sm:px-6 lg:px-8">
             <!-- Header + Toolbar -->
-            <div class="flex justify-between items-center mb-3">
-                <x-ui.heading> จัดการเกณฑ์การประเมิน</x-ui.heading>
-                <div class="flex items-center gap-3 w-full md:w-auto">
+            <div class="flex justify-between items-center">
+                <x-ui.heading class=""> จัดการโครงสร้างเกณฑ์ประเมิน</x-ui.heading>
+                <div class="flex items-center gap-3 w-full md:w-auto mb-1">
                     <div class="relative flex-1 md:flex-none">
                         <input id="search-input" type="text" placeholder="ค้นหาเกณฑ์การประเมิน"
                             class="w-full md:w-72 bg-white border border-gray-100 rounded-md px-10 py-2.5 text-gray-900 text-base placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
@@ -22,6 +22,9 @@
                     </a>
                 </div>
             </div>
+
+             <!-- เส้นตรง
+             <div class="border-t border-1 border-gray-300 mb-3"></div>  -->
 
             <!-- ตาราง -->
             <x-criteria.criteria-table

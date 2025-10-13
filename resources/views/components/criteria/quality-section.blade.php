@@ -72,7 +72,7 @@
                        placeholder="ชื่อเกณฑ์คุณภาพ">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">สัดส่วน <span class="text-red-500">*</span></label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">สัดส่วน (%) <span class="text-red-500">*</span></label>
                 <input type="number" name="qual_ratio"
                        class="qual_ratio border border-gray-300 text-gray-900 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 text-sm transition duration-200"
                        placeholder="สัดส่วน">
