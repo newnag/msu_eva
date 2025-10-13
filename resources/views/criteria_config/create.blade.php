@@ -83,6 +83,7 @@
             node.querySelectorAll(
                 '.evaluation_list_block:not(:first-child), .quant_criteria_block:not(:first-child), .qual_criteria_block:not(:first-child), .quant_sub_criteria_block:not(:first-child), .qual_sub_criteria_block:not(:first-child)'
             ).forEach(e => e.remove());
+            node.querySelectorAll('select').forEach(sel => sel.selectedIndex = 0);
 
             if (blockSelector === '.evaluation_list_block') {
                 const container = document.querySelector('.evaluation_lists_container');

@@ -99,10 +99,13 @@
             data.categories.forEach(cat => {
                 html += `
                 <div class="border border-gray-200 rounded-lg p-4 my-3 bg-gray-50 shadow-sm">
-                    <!------ หมวดหมู่ ------>
+                    <!--------------- หมวดหมู่หลัก --------------->
                     <div class="mb-2 font-semibold text-xl text-black">
                         หมวดหมู่เกณฑ์ประเมิน: ${cat.main_categories}
                     </div>
+                    <!--------------- หมวดหมู่ย่อย --------------->
+                    <div class="mb-4 font-medium text-lg text-gray-700">
+                        หมวดหมู่ย่อย: ${cat.sub_categories} คะแนน
                 `;
 
                 if (cat.evaluation_lists && cat.evaluation_lists.length > 0) {
@@ -118,7 +121,7 @@
 
                             <!-- ชื่อแบบประเมิน (ev.name) + คะแนนรวม (ev.sum_score) -->
                             <div class="flex flex-wrap items-center gap-2 mb-1">
-                                <span class="font-semibold text-xl text-black">${ev.name}</span>
+                                <span class="font-semibold text-xl text-black">ชื่อรายการ: ${ev.name}</span>
                                 <span class="font-medium text-lg text-gray-600">(คะแนนรวม: ${ev.sum_score})</span>
                             </div>
 

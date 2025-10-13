@@ -6,8 +6,12 @@
 
     <!-- Category Block -->
     <div class="category_block bg-white p-8 rounded-lg drop-shadow-md border-l-4 border-blue-600 hover:shadow-xl transition-shadow duration-300">
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="font-bold text-xl text-gray-900">หมวดหมู่การประเมิน</h3>
+
+        <!-- Category Header with Controls -->
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="font-bold text-xl text-gray-900">
+                หมวดการประเมินที่ <span class="category_sequence">1</span>
+            </h3>
             <div class="flex space-x-3">
                 <button type="button" class="move_category_up_btn text-blue-600 hover:text-blue-800 disabled:text-gray-400 transition duration-200" disabled>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -26,22 +30,62 @@
                 </button>
             </div>
         </div>
+        
+         <!------------------------------ 
+            Category Inputs
+            --------------------------->
+        <div class="space-y-6 mb-4 ml-2">
+            <!-- หมวดหมู่หลัก -->
+            <div>
+                <x-ui.label for="main_categories" required>หมวดหมู่หลัก</x-ui.label>
+                <div class="relative">
+                    <select
+                        id="main_categories"
+                        name="main_categories"
+                        required
+                        class="main_categories w-full text-base pr-10 appearance-none px-3 py-2 border border-gray-300 text-gray-900 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                    >
+                        <option value="" disabled selected hidden>-- เลือกหมวดหมู่หลัก --</option>
+                        <option value="ผลสัมฤทธิ์ของการปฏิบัติงาน">ผลสัมฤทธิ์ของการปฏิบัติงาน</option>
+                        <option value="พฤติกรรมของการปฏิบัติงาน">พฤติกรรมของการปฏิบัติงาน</option>
+                    </select>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">ลำดับ</label>
-                <span class="category_sequence text-gray-700 font-medium text-lg">1</span>
+                    <span class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                        <x-icon.chevron-down class="h-4 w-4 text-gray-500" />
+                    </span>
+                </div>
             </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">หมวดหมู่หลัก <span class="text-red-500">*</span></label>
-                <input required class="main_categories border border-gray-300 text-gray-900 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-3 transition duration-200" placeholder="ชื่อหมวดหมู่หลัก">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">หมวดหมู่ย่อย <span class="text-red-500">*</span></label>
-                <input required class="sub_categories border border-gray-300 text-gray-900 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-3 transition duration-200" placeholder="ชื่อหมวดหมู่ย่อย">
+
+            <!-- หมวดหมู่ย่อย + คะแนนหมวดหมู่ย่อย -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- ชื่อหมวดหมู่ย่อย -->
+                <div class="md:col-span-2">
+                    <x-ui.label required class="block text-base">หมวดหมู่ย่อย</x-ui.label>
+                    <input
+                        required
+                        class="sub_categories w-full px-3 py-2 text-base border border-gray-300 text-gray-900 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                        placeholder="ชื่อหมวดหมู่ย่อย"
+                    >
+                </div>
+
+                <!-- คะแนนหมวดหมู่ย่อย -->
+                <div>
+                    <x-ui.label for="sub_category_score" required class="block text-base">คะแนนรวม</x-ui.label>
+                    <input
+                        type="number"
+                        min="0"
+                        step="0.5"
+                        name="sub_category_score"
+                        class="sub_category_score w-full px-3 py-2 text-base border border-gray-300 text-gray-900 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                        placeholder="กรอกคะแนน"
+                    >
+                </div>
             </div>
         </div>
 
+        <!------------------------------ 
+            Evaluation Lists Container 
+            --------------------------->
         <div class="evaluation_lists_container space-y-6 mt-8">
             <h4 class="font-bold text-lg text-gray-900 flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -82,7 +126,7 @@
                         <input required name="eval_name" class="eval_name border border-gray-300 text-gray-900 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 transition duration-200" placeholder="ชื่อรายการประเมิน">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">คะแนนรวม <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ค่าน้ำหนัก<span class="text-red-500">*</span></label>
                         <input type="number" required name="sum_score" class="sum_score border border-gray-300 text-gray-900 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 transition duration-200" placeholder="คะแนนรวม">
                     </div>
                     <div>
