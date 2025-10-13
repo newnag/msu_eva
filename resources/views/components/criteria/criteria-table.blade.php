@@ -150,11 +150,11 @@ function renderCriteriaTable(items) {
             <td class="px-6 py-2">
                 <div class="flex items-center md:justify-center gap-3">
                     <a href="${editUrl}"
-                       class="action-stop inline-flex items-center gap-1.5 rounded-md border !border-blue-600 text-blue-600 hover:bg-blue-50 font-medium text-sm px-3 py-1.5 shadow-sm">
+                       class="action-stop inline-flex items-center gap-1.5 rounded-md border !border-gray-300 text-blue-600 hover:bg-blue-50 font-medium text-sm px-3 py-1.5">
                         <i class="fas fa-edit"></i><span>แก้ไข</span>
                     </a>
                     <button type="button"
-                        class="action-stop inline-flex items-center gap-1.5 rounded-md border !border-red-500 text-red-500 hover:bg-red-50 font-medium text-sm px-3 py-1.5 shadow-sm"
+                        class="action-stop inline-flex items-center gap-1.5 rounded-md border !border-gray-300 text-red-500 hover:bg-red-50 font-medium text-sm px-3 py-1.5"
                         data-id="${item.id}">
                         <i class="fas fa-trash-alt"></i><span>ลบ</span>
                     </button>
