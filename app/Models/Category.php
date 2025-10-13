@@ -17,10 +17,15 @@ class Category extends Model
     protected $fillable = [
         'main_categories',
         'sub_categories',
+        'sub_category_score',
         'sequence',
         'criteria_version_id',
     ];
 
+    protected $casts = [
+        'sub_category_score' => 'float',
+    ];
+    
     public function criteriaVersion(): BelongsTo
     {
         return $this->belongsTo(CriteriaVersion::class);
