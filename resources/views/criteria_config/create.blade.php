@@ -3,18 +3,18 @@
 @section('content')
     <div class="py-2 min-h-screen">
         <!-- Breadcrumb
-         <div>
-         <nav class="text-base text-gray-600 mb-3">
-            <a href="{{ route('criteria_config.index') }}" class="hover:text-blue-600">จัดการโครงสร้างเกณฑ์</a>
-            <span class="mx-2">›</span>
-            <span class="text-gray-800 font-normal">สร้างเกณฑ์ใหม่</span>
-            </nav>
-         </div>  -->
-       
+                 <div>
+                 <nav class="text-base text-gray-600 mb-3">
+                    <a href="{{ route('criteria_config.index') }}" class="hover:text-blue-600">จัดการโครงสร้างเกณฑ์</a>
+                    <span class="mx-2">›</span>
+                    <span class="text-gray-800 font-normal">สร้างเกณฑ์ใหม่</span>
+                    </nav>
+                 </div>  -->
+
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div>
                 <x-ui.heading level="h1" size="text-3xl" class="mb-2">
-                สร้างเกณฑ์การประเมินใหม่
+                    สร้างเกณฑ์การประเมินใหม่
                 </x-ui.heading>
 
                 <p class="text-gray-600 text-lg text-normal">กรอกข้อมูลด้านล่างให้ครบเพื่อสร้างเกณฑ์การประเมินใหม่</p>
@@ -24,21 +24,14 @@
                 @csrf
                 <!-- Assessment info -->
                 <div class="bg-white p-8 rounded-lg drop-shadow-md hover:shadow-xl transition-shadow duration-300">
-                <x-criteria.assessment-info
-                    :version-name="old('version_name')"
-                    :report-title="old('report_title')"
-                    :report-description="old('report_description')"
-                    :assessment-type="old('assessment_type')"
-                    :comment="old('comment')"
-                />
+                    <x-criteria.assessment-info :version-name="old('version_name')" :report-title="old('report_title')"
+                        :report-description="old('report_description')" :assessment-type="old('assessment_type')"
+                        :comment="old('comment')" />
                 </div>
 
                 <!-- Categories -->
                 <x-criteria.categories />
-                <!-- END Category Block -->
-
-                <div class="flex justify-end mt-10 space-x-4">
-                    <button type="button" id="reset_form_btn"
+                <div class="flex justify-end mt-10 space-x-4"><button type="button" id="reset_form_btn"
                         class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
@@ -168,40 +161,40 @@
                 modal.className = 'fixed inset-0 z-50 flex items-center justify-center';
                 modal.style.background = 'rgba(0,0,0,0.6)';
                 modal.innerHTML = `
-                    <div id="custom-alert-box" class="bg-white rounded-lg shadow-2xl max-w-sm w-full p-6 text-center animate-fade-in">
-                        <div class="flex justify-center mb-4">
-                            <span class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-100">
-                                <svg class="w-7 h-7 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                            </span>
-                        </div>
-                        <div class="text-lg font-semibold mb-2 text-red-600">กรอกข้อมูลไม่ครบถ้วน</div>
-                        <div class="mb-4 text-gray-700">${message}</div>
-                        <button id="custom-alert-ok" class="mt-2 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none">ตกลง</button>
-                    </div>
-                `;
+                            <div id="custom-alert-box" class="bg-white rounded-lg shadow-2xl max-w-sm w-full p-6 text-center animate-fade-in">
+                                <div class="flex justify-center mb-4">
+                                    <span class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-100">
+                                        <svg class="w-7 h-7 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                                    </span>
+                                </div>
+                                <div class="text-lg font-semibold mb-2 text-red-600">กรอกข้อมูลไม่ครบถ้วน</div>
+                                <div class="mb-4 text-gray-700">${message}</div>
+                                <button id="custom-alert-ok" class="mt-2 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none">ตกลง</button>
+                            </div>
+                        `;
                 document.body.appendChild(modal);
             } else {
                 modal.className = 'fixed inset-0 z-50 flex items-center justify-center';
                 modal.style.background = 'rgba(0,0,0,0.6)';
                 modal.querySelector('#custom-alert-box').className = `bg-white rounded-lg shadow-2xl max-w-sm w-full p-6 text-center animate-fade-in`;
                 modal.querySelector('#custom-alert-box').innerHTML = `
-                    <div class="flex justify-center mb-4">
-                        <span class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-100">
-                            <svg class=\"w-7 h-7 text-red-500\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M6 18L18 6M6 6l12 12\"/></svg>
-                        </span>
-                    </div>
-                    <div class="text-lg font-semibold mb-2 text-red-600">กรอกข้อมูลไม่ครบถ้วน</div>
-                    <div class="mb-4 text-gray-700">${message}</div>
-                    <button id=\"custom-alert-ok\" class=\"mt-2 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none\">ตกลง</button>
-                `;
+                            <div class="flex justify-center mb-4">
+                                <span class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-100">
+                                    <svg class=\"w-7 h-7 text-red-500\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M6 18L18 6M6 6l12 12\"/></svg>
+                                </span>
+                            </div>
+                            <div class="text-lg font-semibold mb-2 text-red-600">กรอกข้อมูลไม่ครบถ้วน</div>
+                            <div class="mb-4 text-gray-700">${message}</div>
+                            <button id=\"custom-alert-ok\" class=\"mt-2 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none\">ตกลง</button>
+                        `;
                 modal.style.display = '';
             }
-            modal.querySelector('#custom-alert-ok').onclick = function() {
+            modal.querySelector('#custom-alert-ok').onclick = function () {
                 modal.style.display = 'none';
             };
         }
         // // Validate required fields before showing confirm modal
-        document.getElementById('jsonForm').addEventListener('submit', function(e) {
+        document.getElementById('jsonForm').addEventListener('submit', function (e) {
             // Prevent default submit for custom validation
             e.preventDefault();
             // Basic required fields
@@ -240,77 +233,77 @@
             }, 1000);
         }
 
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (e.target.closest('.delete_category_btn')) {
                 const block = e.target.closest('.category_block');
                 const container = document.getElementById('categories_container');
                 if (confirm('ต้องการลบหมวดหมู่นี้ใช่หรือไม่?')) {
-            if (container.querySelectorAll('.category_block').length > 1) {
-                block.remove();
-                updateCategorySequence(container);
-                updateButtonStates('.category_block', '.move_category_up_btn', '.move_category_down_btn');
-            } else {
-                showValidationErrorModal('ต้องมีหมวดหมู่การประเมินอย่างน้อย 1 รายการ');
-            }
+                    if (container.querySelectorAll('.category_block').length > 1) {
+                        block.remove();
+                        updateCategorySequence(container);
+                        updateButtonStates('.category_block', '.move_category_up_btn', '.move_category_down_btn');
+                    } else {
+                        showValidationErrorModal('ต้องมีหมวดหมู่การประเมินอย่างน้อย 1 รายการ');
+                    }
                 }
             }
 
             if (e.target.closest('.delete_eval_btn')) {
                 const block = e.target.closest('.evaluation_list_block');
                 const container = block.closest('.evaluation_lists_container');
-            if (container.querySelectorAll('.evaluation_list_block').length > 1) {
-                block.remove();
-                updateEvalSequence(container);
-                updateButtonStates('.evaluation_list_block', '.move_eval_up_btn', '.move_eval_down_btn');
-            } else {
-                showValidationErrorModal('ต้องมีรายการประเมินอย่างน้อย 1 รายการ');
-            }
+                if (container.querySelectorAll('.evaluation_list_block').length > 1) {
+                    block.remove();
+                    updateEvalSequence(container);
+                    updateButtonStates('.evaluation_list_block', '.move_eval_up_btn', '.move_eval_down_btn');
+                } else {
+                    showValidationErrorModal('ต้องมีรายการประเมินอย่างน้อย 1 รายการ');
+                }
             }
 
             if (e.target.closest('.delete_quant_btn')) {
                 const block = e.target.closest('.quant_criteria_block');
                 const container = block.closest('.quantity_main_criterias_container');
-            if (container.querySelectorAll('.quant_criteria_block').length > 1) {
-                block.remove();
-                updateQuantMainSequence(container);
-                updateButtonStates('.quant_criteria_block', '.move_quant_up_btn', '.move_quant_down_btn');
-            } else {
-                showValidationErrorModal('ต้องมีเกณฑ์ปริมาณหลักอย่างน้อย 1 รายการ');
-            }
+                if (container.querySelectorAll('.quant_criteria_block').length > 1) {
+                    block.remove();
+                    updateQuantMainSequence(container);
+                    updateButtonStates('.quant_criteria_block', '.move_quant_up_btn', '.move_quant_down_btn');
+                } else {
+                    showValidationErrorModal('ต้องมีเกณฑ์ปริมาณหลักอย่างน้อย 1 รายการ');
+                }
             }
 
             if (e.target.closest('.delete_quant_sub_btn')) {
                 const block = e.target.closest('.quant_sub_criteria_block');
                 const container = block.closest('.quant_sub_criteria_container');
-            if (container.querySelectorAll('.quant_sub_criteria_block').length > 1) {
-                block.remove();
-                updateQuantSubSequence(container);
-            } else {
-                showValidationErrorModal('ต้องมีเกณฑ์ปริมาณย่อยอย่างน้อย 1 รายการ');
-            }
+                if (container.querySelectorAll('.quant_sub_criteria_block').length > 1) {
+                    block.remove();
+                    updateQuantSubSequence(container);
+                } else {
+                    showValidationErrorModal('ต้องมีเกณฑ์ปริมาณย่อยอย่างน้อย 1 รายการ');
+                }
             }
 
             if (e.target.closest('.delete_qual_btn')) {
                 const block = e.target.closest('.qual_criteria_block');
                 const container = block.closest('.quality_main_criterias_container');
-            if (container.querySelectorAll('.qual_criteria_block').length > 1) {
-                block.remove();
-                updateQualMainSequence(container);
-                updateButtonStates('.qual_criteria_block', '.move_qual_up_btn', '.move_qual_down_btn');
-            } else {
-                showValidationErrorModal('ต้องมีเกณฑ์คุณภาพหลักอย่างน้อย 1 รายการ');
-            }
+                if (container.querySelectorAll('.qual_criteria_block').length > 1) {
+                    block.remove();
+                    updateQualMainSequence(container);
+                    updateButtonStates('.qual_criteria_block', '.move_qual_up_btn', '.move_qual_down_btn');
+                } else {
+                    showValidationErrorModal('ต้องมีเกณฑ์คุณภาพหลักอย่างน้อย 1 รายการ');
+                }
             }
 
             if (e.target.closest('.delete_qual_sub_btn')) {
                 const block = e.target.closest('.qual_sub_criteria_block');
                 const container = block.closest('.qual_sub_criterias_container');
-            if (container.querySelectorAll('.qual_sub_criteria_block').length > 1) {
-                block.remove();
-                updateQualSubSequence(container);
-            } else {
-                showValidationErrorModal('ต้องมีเกณฑ์คุณภาพย่อยอย่างน้อย 1 รายการ');
-            }
+                if (container.querySelectorAll('.qual_sub_criteria_block').length > 1) {
+                    block.remove();
+                    updateQualSubSequence(container);
+                } else {
+                    showValidationErrorModal('ต้องมีเกณฑ์คุณภาพย่อยอย่างน้อย 1 รายการ');
+                }
             }
 
             if (e.target.closest('.move_category_up_btn')) {
@@ -400,15 +393,38 @@
             }
 
             if (e.target.closest('#add_category_btn')) {
-                let newBlock = cloneAndClear('.category_block');
-                document.getElementById('categories_container').appendChild(newBlock);
+                const container = document.getElementById('categories_container');
+                const newBlock = cloneAndClear('.category_block');
+
+                // 1) แทรก "หลังหมวดแรก"
+                const first = container.querySelector('.category_block');
+                const insertAfter = first ? first.nextElementSibling : null;
+                if (insertAfter) {
+                    container.insertBefore(newBlock, insertAfter);
+                } else if (first) {
+                    // มีหมวดแรกแต่ยังไม่มีตัวถัดไป => วางหลังหมวดแรก
+                    container.appendChild(newBlock);
+                } else {
+                    // กรณีไม่มีหมวดเลย (เผื่อไว้) => วางเป็นตัวแรก
+                    container.appendChild(newBlock);
+                }
+
+                // อัปเดตลำดับ + ปุ่มเลื่อนขึ้น/ลง
                 updateButtonStates('.category_block', '.move_category_up_btn', '.move_category_down_btn');
-                updateCategorySequence(document.getElementById('categories_container'));
-                newBlock.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+                updateCategorySequence(container);
+
+                // 2) ย้ายปุ่ม "เพิ่มหมวดหมู่การประเมิน" ไปท้ายสุดเสมอ (ตามหลัง container)
+                const addBtn = document.getElementById('add_category_btn');
+                container.parentNode.insertBefore(addBtn, container.nextSibling);
+
+                // เลื่อนให้เห็นบล็อกที่เพิ่งเพิ่ม
+                newBlock.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                // (ออปชัน) โฟกัสฟิลด์แรกของบล็อกใหม่เพื่อใส่ข้อมูลทันที
+                const firstInput = newBlock.querySelector('input, select, textarea');
+                if (firstInput) firstInput.focus();
             }
+
 
             if (e.target.closest('.add_evaluation_list_btn')) {
                 let parent = e.target.closest('.category_block').querySelector('.evaluation_lists_container');
@@ -473,7 +489,7 @@
             }
         });
 
-        document.addEventListener('change', function(e) {
+        document.addEventListener('change', function (e) {
             if (e.target.classList.contains('criteria_type')) {
                 const evalBlock = e.target.closest('.evaluation_list_block');
                 const quantityContainer = evalBlock.querySelector('.quantity_main_criterias_container');
@@ -485,12 +501,12 @@
             }
         });
 
-        document.getElementById('reset_form_btn').addEventListener('click', function() {
+        document.getElementById('reset_form_btn').addEventListener('click', function () {
             showValidationErrorModal('ต้องการล้างข้อมูลทั้งหมดใช่หรือไม่? <br><br><button id="confirm-reset-btn" class="mt-2 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none">ยืนยัน</button>');
             setTimeout(() => {
                 const confirmBtn = document.getElementById('confirm-reset-btn');
                 if (confirmBtn) {
-                    confirmBtn.onclick = function() {
+                    confirmBtn.onclick = function () {
                         document.getElementById('custom-alert-modal').style.display = 'none';
                         document.getElementById('jsonForm').reset();
                         document.querySelectorAll('.quantity_main_criterias_container, .quality_main_criterias_container')
@@ -508,7 +524,7 @@
 
         let finalData = null;
 
-        document.getElementById('jsonForm').addEventListener('submit', function(event) {
+        document.getElementById('jsonForm').addEventListener('submit', function (event) {
             event.preventDefault();
 
             const versionName = document.querySelector('.version_name').value.trim();
@@ -594,56 +610,56 @@
                         let valid = true;
                         evalBlock.querySelectorAll(
                             '.quantity_main_criterias_container .quant_criteria_block').forEach(
-                            (qMain, qj) => {
-                                const quantName = qMain.querySelector('.quant_name').value
-                                    .trim();
-                                const quantTooltips = qMain.querySelector('.quant_tooltips')
-                                    .value.trim();
-                                if (!quantName || !quantTooltips) {
-                                    // alert(
-                                    //     `กรุณากรอกชื่อเกณฑ์และคำอธิบายสำหรับเกณฑ์ปริมาณหลักที่ ${qj + 1} ในรายการประเมินที่ ${evalI + 1} หมวดหมู่ที่ ${catI + 1}`
-                                    // );
-                                    valid = false;
-                                    return;
-                                }
-
-                                let quantMain = {
-                                    name: quantName,
-                                    tooltips: quantTooltips,
-                                    sequence: Number(qMain.querySelector(
-                                        '.quant_main_sequence').textContent),
-                                    quantity_sub_criterias: []
-                                };
-
-                                qMain.querySelectorAll(
-                                    '.quant_sub_criteria_container .quant_sub_criteria_block'
-                                ).forEach((subQ, sk) => {
-                                    const subName = subQ.querySelector(
-                                        '.quant_sub_name').value.trim();
-                                    const scoreA = subQ.querySelector('.score_a').value;
-                                    const scoreB = subQ.querySelector('.score_b').value;
-                                    if (!subName || !scoreA || !scoreB) {
-                                        alert(
-                                            `กรุณากรอกชื่อเกณฑ์ย่อย, คะแนน A, และคะแนน B สำหรับเกณฑ์ปริมาณย่อยที่ ${sk + 1} ในเกณฑ์ปริมาณหลักที่ ${qj + 1} รายการประเมินที่ ${evalI + 1} หมวดหมู่ที่ ${catI + 1}`
-                                        );
+                                (qMain, qj) => {
+                                    const quantName = qMain.querySelector('.quant_name').value
+                                        .trim();
+                                    const quantTooltips = qMain.querySelector('.quant_tooltips')
+                                        .value.trim();
+                                    if (!quantName || !quantTooltips) {
+                                        // alert(
+                                        //     `กรุณากรอกชื่อเกณฑ์และคำอธิบายสำหรับเกณฑ์ปริมาณหลักที่ ${qj + 1} ในรายการประเมินที่ ${evalI + 1} หมวดหมู่ที่ ${catI + 1}`
+                                        // );
                                         valid = false;
                                         return;
                                     }
 
-                                    quantMain.quantity_sub_criterias.push({
-                                        name: subName,
-                                        sequence: Number(subQ.querySelector(
-                                                '.quant_sub_sequence')
-                                            .textContent),
-                                        score_a: Number(scoreA),
-                                        score_b: Number(scoreB)
-                                    });
-                                });
+                                    let quantMain = {
+                                        name: quantName,
+                                        tooltips: quantTooltips,
+                                        sequence: Number(qMain.querySelector(
+                                            '.quant_main_sequence').textContent),
+                                        quantity_sub_criterias: []
+                                    };
 
-                                if (valid) {
-                                    evalList.quantity_main_criterias.push(quantMain);
-                                }
-                            });
+                                    qMain.querySelectorAll(
+                                        '.quant_sub_criteria_container .quant_sub_criteria_block'
+                                    ).forEach((subQ, sk) => {
+                                        const subName = subQ.querySelector(
+                                            '.quant_sub_name').value.trim();
+                                        const scoreA = subQ.querySelector('.score_a').value;
+                                        const scoreB = subQ.querySelector('.score_b').value;
+                                        if (!subName || !scoreA || !scoreB) {
+                                            alert(
+                                                `กรุณากรอกชื่อเกณฑ์ย่อย, คะแนน A, และคะแนน B สำหรับเกณฑ์ปริมาณย่อยที่ ${sk + 1} ในเกณฑ์ปริมาณหลักที่ ${qj + 1} รายการประเมินที่ ${evalI + 1} หมวดหมู่ที่ ${catI + 1}`
+                                            );
+                                            valid = false;
+                                            return;
+                                        }
+
+                                        quantMain.quantity_sub_criterias.push({
+                                            name: subName,
+                                            sequence: Number(subQ.querySelector(
+                                                '.quant_sub_sequence')
+                                                .textContent),
+                                            score_a: Number(scoreA),
+                                            score_b: Number(scoreB)
+                                        });
+                                    });
+
+                                    if (valid) {
+                                        evalList.quantity_main_criterias.push(quantMain);
+                                    }
+                                });
                         if (!valid) return;
                     }
 
@@ -651,54 +667,54 @@
                         let valid = true;
                         evalBlock.querySelectorAll(
                             '.quality_main_criterias_container .qual_criteria_block').forEach((
-                            qMain, qj) => {
-                            const qualName = qMain.querySelector('.qual_name').value.trim();
-                            const qualRatio = qMain.querySelector('.qual_ratio').value;
-                            const qualTooltips = qMain.querySelector('.qual_tooltips').value
-                                .trim();
-                            if (!qualName || !qualRatio || !qualTooltips) {
-                                alert(
-                                    `กรุณากรอกชื่อเกณฑ์, สัดส่วน, และคำอธิบายสำหรับเกณฑ์คุณภาพหลักที่ ${qj + 1} ในรายการประเมินที่ ${evalI + 1} หมวดหมู่ที่ ${catI + 1}`
-                                );
-                                valid = false;
-                                return;
-                            }
-
-                            let qualMain = {
-                                name: qualName,
-                                ratio: Number(qualRatio),
-                                tooltips: qualTooltips,
-                                sequence: Number(qMain.querySelector(
-                                    '.qual_main_sequence').textContent),
-                                quality_sub_criterias: []
-                            };
-
-                            qMain.querySelectorAll(
-                                '.qual_sub_criterias_container .qual_sub_criteria_block'
-                            ).forEach((subQ, sk) => {
-                                const subName = subQ.querySelector('.qual_sub_name')
-                                    .value.trim();
-                                const numScore = subQ.querySelector('.num_score')
-                                    .value;
-                                if (!subName || !numScore) {
-                                    showValidationErrorModal(`กรุณากรอกชื่อเกณฑ์ย่อยและคะแนนสูงสุดสำหรับเกณฑ์คุณภาพย่อยที่ ${sk + 1} ในเกณฑ์คุณภาพหลักที่ ${qj + 1} รายการประเมินที่ ${evalI + 1} หมวดหมู่ที่ ${catI + 1}`);
+                                qMain, qj) => {
+                                const qualName = qMain.querySelector('.qual_name').value.trim();
+                                const qualRatio = qMain.querySelector('.qual_ratio').value;
+                                const qualTooltips = qMain.querySelector('.qual_tooltips').value
+                                    .trim();
+                                if (!qualName || !qualRatio || !qualTooltips) {
+                                    alert(
+                                        `กรุณากรอกชื่อเกณฑ์, สัดส่วน, และคำอธิบายสำหรับเกณฑ์คุณภาพหลักที่ ${qj + 1} ในรายการประเมินที่ ${evalI + 1} หมวดหมู่ที่ ${catI + 1}`
+                                    );
                                     valid = false;
                                     return;
                                 }
 
-                                qualMain.quality_sub_criterias.push({
-                                    name: subName,
-                                    sequence: Number(subQ.querySelector(
-                                            '.qual_sub_sequence')
-                                        .textContent),
-                                    num_score: Number(numScore)
-                                });
-                            });
+                                let qualMain = {
+                                    name: qualName,
+                                    ratio: Number(qualRatio),
+                                    tooltips: qualTooltips,
+                                    sequence: Number(qMain.querySelector(
+                                        '.qual_main_sequence').textContent),
+                                    quality_sub_criterias: []
+                                };
 
-                            if (valid) {
-                                evalList.quality_main_criterias.push(qualMain);
-                            }
-                        });
+                                qMain.querySelectorAll(
+                                    '.qual_sub_criterias_container .qual_sub_criteria_block'
+                                ).forEach((subQ, sk) => {
+                                    const subName = subQ.querySelector('.qual_sub_name')
+                                        .value.trim();
+                                    const numScore = subQ.querySelector('.num_score')
+                                        .value;
+                                    if (!subName || !numScore) {
+                                        showValidationErrorModal(`กรุณากรอกชื่อเกณฑ์ย่อยและคะแนนสูงสุดสำหรับเกณฑ์คุณภาพย่อยที่ ${sk + 1} ในเกณฑ์คุณภาพหลักที่ ${qj + 1} รายการประเมินที่ ${evalI + 1} หมวดหมู่ที่ ${catI + 1}`);
+                                        valid = false;
+                                        return;
+                                    }
+
+                                    qualMain.quality_sub_criterias.push({
+                                        name: subName,
+                                        sequence: Number(subQ.querySelector(
+                                            '.qual_sub_sequence')
+                                            .textContent),
+                                        num_score: Number(numScore)
+                                    });
+                                });
+
+                                if (valid) {
+                                    evalList.quality_main_criterias.push(qualMain);
+                                }
+                            });
                         if (!valid) return;
                     }
 
