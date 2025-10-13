@@ -30,7 +30,6 @@
                 </button>
             </div>
         </div>
-        
          <!------------------------------ 
             Category Inputs
             --------------------------->
@@ -78,6 +77,7 @@
                         name="sub_category_score"
                         class="sub_category_score w-full px-3 py-2 text-base border border-gray-300 text-gray-900 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                         placeholder="กรอกคะแนน"
+                        required
                     >
                 </div>
             </div>

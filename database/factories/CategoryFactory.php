@@ -20,6 +20,7 @@ class CategoryFactory extends Factory
         return [
             'main_categories' => fake()->word(),
             'sub_categories' => fake()->word(),
+            'sub_category_score' => fake()->randomFloat(2, 0, 100),
             'sequence' => fake()->numberBetween(1, 5),
             'criteria_version_id' => CriteriaVersion::first()?->id,
         ];

@@ -52,202 +52,222 @@
 
         // ===== สร้าง HTML แสดงรายละเอียดเวอร์ชัน/เกณฑ์ จาก object "data" =====
         function renderVersionDetails(data) {
-        let html = '';
-        html += `<div class="bg-white rounded-lg shadow-lg p-4 mb-8">`;
+            let html = '';
+            html += `<div class="bg-white rounded-lg shadow-lg p-4 mb-8">`;
 
-        // หมายเหตุของ report_datas 
-        const headerNotes = [];
+            // หมายเหตุของ report_datas 
+            const headerNotes = [];
 
-        // === ชื่อเรื่อง / คำอธิบาย / ประเภทการประเมิน / เวอร์ชันการประเมิน ====
-        if (data.report_datas && data.report_datas.length > 0) {
-            html += `<div class="mb-6">
-                        <div class="space-y-4">
-                    `;
+            // === ชื่อเรื่อง / คำอธิบาย / ประเภทการประเมิน / เวอร์ชันการประเมิน ====
+            if (data.report_datas && data.report_datas.length > 0) {
+                html += `<div class="mb-6">
+                            <div class="space-y-4">
+                        `;
 
-            // Loop แสดงการ์ดแสดงส่วน header
-            data.report_datas.forEach(rd => {
-                // เก็บหมายเหตุ (ถ้ามี) 
-                if (rd.comment && String(rd.comment).trim() !== '') {
-                    headerNotes.push(rd.comment);
-                }
+                // Loop แสดงการ์ดแสดงส่วน header
+                data.report_datas.forEach(rd => {
+                    // เก็บหมายเหตุ (ถ้ามี) 
+                    if (rd.comment && String(rd.comment).trim() !== '') {
+                        headerNotes.push(rd.comment);
+                    }
 
-                html += `
-                    <div class="bg-blue-100 w-full border border-blue-100 rounded-lg px-4 py-3 drop-shadow-xl drop-shadow-gray-100">
-                        <!--------- ชื่อเวอร์ชัน -------->
-                        <div class="text-base text-gray-600 font-medium text-end">
-                            เวอร์ชัน: ${data.version_name ?? '-'}
-                        </div>
-
-                        <div class="space-y-3 mb-2">
-                            <!-- ชื่อเกณฑ์ (report_title) -->
-                            <div class="text-xl text-black font-semibold text-center">${rd.report_title}</div>
-
-                            <!-- คำอธิบายเกณฑ์ (report_description) -->
-                            <div class="text-xl text-black font-semibold text-center">${rd.report_description}</div>
-
-                            <!-- ประเภทการประเมิน (assessment_type) -->
-                            <div class="text-xl text-black font-semibold text-center">( ${rd.assessment_type} )</div>
-                        </div>
-                    </div>`;
-            });
-            html += `</div></div>`;
-        }
-
-        // ===== หมวดหมู่เกณฑ์ประเมิน categories[*] =====
-        if (data.categories && data.categories.length > 0) {
-            // วนลูปหมวดหมู่หลักแต่ละอัน
-            data.categories.forEach(cat => {
-                html += `
-                <div class="border border-gray-200 rounded-lg p-4 my-3 bg-gray-50 shadow-sm">
-                    <!--------------- หมวดหมู่หลัก --------------->
-                    <div class="mb-2 font-semibold text-xl text-black">
-                        หมวดหมู่เกณฑ์ประเมิน: ${cat.main_categories}
-                    </div>
-                    <!--------------- หมวดหมู่ย่อย --------------->
-                    <div class="mb-4 font-medium text-lg text-gray-700">
-                        หมวดหมู่ย่อย: ${cat.sub_categories} คะแนน
-                `;
-
-                if (cat.evaluation_lists && cat.evaluation_lists.length > 0) {
-                    html += `<div class="ml-2">
-                                <!-- กล่องรวมรายการแบบประเมิน -->
-                                <div class="space-y-3">
-                            `;
-
-                    // วนลูปแบบประเมินแต่ละรายการ
-                    cat.evaluation_lists.forEach(ev => {
-                        html +=
-                        `<div class="bg-white border border-gray-100 rounded p-3 shadow-sm">
-
-                            <!-- ชื่อแบบประเมิน (ev.name) + คะแนนรวม (ev.sum_score) -->
-                            <div class="flex flex-wrap items-center gap-2 mb-1">
-                                <span class="font-semibold text-xl text-black">ชื่อรายการ: ${ev.name}</span>
-                                <span class="font-medium text-lg text-gray-600">(คะแนนรวม: ${ev.sum_score})</span>
+                    html += `
+                        <div class="bg-blue-100 w-full border border-blue-100 rounded-lg px-4 py-3 drop-shadow-xl drop-shadow-gray-100">
+                            <!--------- ชื่อเวอร์ชัน -------->
+                            <div class="text-base text-gray-600 font-medium text-end">
+                                เวอร์ชัน: ${data.version_name ?? '-'}
                             </div>
 
-                            <!-- หมายเหตุของแบบประเมิน (annotation) ถ้ามี -->
-                            ${ev.annotation ? `<div class="text-xs text-gray-500 mb-1">หมายเหตุ: ${ev.annotation}</div>` : ''}`;
+                            <div class="space-y-3 mb-2">
+                                <!-- ชื่อเกณฑ์ (report_title) -->
+                                <div class="text-xl text-black font-semibold text-center">${rd.report_title}</div>
 
-                        // ================= เกณฑ์เชิงปริมาณ (Quantity)  quantity_main_criterias[*] ==============
-                        if (ev.quantity_main_criterias && ev.quantity_main_criterias.length > 0) {
-                            html += `<div class="ml-2 mt-2 space-y-4">`;
+                                <!-- คำอธิบายเกณฑ์ (report_description) -->
+                                <div class="text-xl text-black font-semibold text-center">${rd.report_description}</div>
 
-                            ev.quantity_main_criterias.forEach((qm, qmIdx) => {
-                                const mainNo = `${qmIdx + 1}.`; // 1., 2., 3., ... n.
+                                <!-- ประเภทการประเมิน (assessment_type) -->
+                                <div class="text-xl text-black font-semibold text-center">( ${rd.assessment_type} )</div>
+                            </div>
+                        </div>`;
+                });
+                html += `</div></div>`;
+            }
 
-                                html += `
-                                    <div class="mb-2">
-                                        <div class="space-y-3">
-                                            <!-- เลขลำดับหลัก + ชื่อเกณฑ์หลักเชิงปริมาณ -->
-                                            <div class="flex items-center text-lg text-black font-semibold text-center">
-                                                <span class="mr-2">${mainNo}</span>
-                                                <span>${qm.name}</span>
-                                            </div>
+            // ======  รวมคะแนน sub_category_score ตามหมวดหลัก ======
+            const sumByMainCategory = {};
+            if (data.categories && data.categories.length > 0) {
+                data.categories.forEach(cat => {
+                    const main = cat.main_categories;
+                    const score = parseFloat(cat.sub_category_score) || 0;
+                    if (!sumByMainCategory[main]) sumByMainCategory[main] = 0;
+                    sumByMainCategory[main] += score;
+                });
+            }
+
+            // ===== หมวดหมู่เกณฑ์ประเมิน categories[*] =====
+            if (data.categories && data.categories.length > 0) {
+                // วนลูปหมวดหมู่หลักแต่ละอัน
+                data.categories.forEach(cat => {
+                    const main = cat.main_categories || 'ไม่ระบุหมวดหมู่';
+                    const totalScoreRaw = sumByMainCategory[main] ?? 0;
+                    const totalScore = Number(totalScoreRaw).toLocaleString(undefined, { maximumFractionDigits: 2 });
+
+                    html += `
+                    <div class="border border-gray-200 rounded-lg p-4 my-3 bg-gray-50 shadow-sm">
+                        <!--------------- หมวดหมู่หลัก --------------->
+                        <div class="mb-2 font-semibold text-xl text-black">
+                            หมวดหมู่เกณฑ์ประเมิน: ${cat.main_categories}
+                            <span>
+                            <span class="underline decoration-1 underline-offset-2">${totalScore} คะแนน</span> แบ่งเป็น
+                            </span>
+
+                        </div>
+                        <!--------------- หมวดหมู่ย่อย --------------->
+                        <div class="mb-4 font-medium text-lg text-gray-700">
+                        หมวดหมู่ย่อย: ${cat.sub_categories} ${cat.sub_category_score ?? 0} คะแนน
+                        </div>
+                    `;
+
+                    if (cat.evaluation_lists && cat.evaluation_lists.length > 0) {
+                        html += `<div class="ml-2">
+                                    <!-- กล่องรวมรายการแบบประเมิน -->
+                                    <div class="space-y-3">
                                 `;
 
-                                // -------- ตารางเกณฑ์ย่อยเชิงปริมาณ  quantity_sub_criterias[*]-------
-                                if (qm.quantity_sub_criterias && qm.quantity_sub_criterias.length > 0) {
+                        // วนลูปแบบประเมินแต่ละรายการ
+                        cat.evaluation_lists.forEach(ev => {
+                            html +=
+                            `<div class="bg-white border border-gray-100 rounded p-3 shadow-sm">
+
+                                <!-- ชื่อแบบประเมิน (ev.name) + คะแนนรวม (ev.sum_score) -->
+                                <div class="flex flex-wrap items-center gap-2 mb-1">
+                                    <span class="font-semibold text-xl text-black">ชื่อรายการ: ${ev.name}</span>
+                                    <span class="font-medium text-lg text-gray-600">(คะแนนรวม: ${ev.sum_score})</span>
+                                </div>
+
+                                <!-- หมายเหตุของแบบประเมิน (annotation) ถ้ามี -->
+                                ${ev.annotation ? `<div class="text-xs text-gray-500 mb-1">หมายเหตุ: ${ev.annotation}</div>` : ''}`;
+
+                            // ================= เกณฑ์เชิงปริมาณ (Quantity)  quantity_main_criterias[*] ==============
+                            if (ev.quantity_main_criterias && ev.quantity_main_criterias.length > 0) {
+                                html += `<div class="ml-2 mt-2 space-y-4">`;
+
+                                ev.quantity_main_criterias.forEach((qm, qmIdx) => {
+                                    const mainNo = `${qmIdx + 1}.`; // 1., 2., 3., ... n.
+
                                     html += `
-                                        <div class="overflow-x-auto">
-                                            <table class="min-w-[320px] w-full text-sm border border-gray-300 rounded border-collapse">
-                                                <thead class="bg-sky-100">
-                                                    <tr>
-                                                        <th class="px-3 py-2 text-center font-semibold text-black text-base border border-gray-300">
-                                                            ชื่อเกณฑ์ย่อย
-                                                        </th>
-                                                        <th class="px-3 py-2 text-center font-semibold text-black text-base border border-gray-300">
-                                                            ค่านํ้ำหนักคะแนน (A)
-                                                        </th>
-                                                        <th class="px-3 py-2 text-center font-semibold text-black text-base border border-gray-300">
-                                                            หน่วยภาระงานมาตรฐาน (B)
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
+                                        <div class="mb-2">
+                                            <div class="space-y-3">
+                                                <!-- เลขลำดับหลัก + ชื่อเกณฑ์หลักเชิงปริมาณ -->
+                                                <div class="flex items-center text-lg text-black font-semibold text-center">
+                                                    <span class="mr-2">${mainNo}</span>
+                                                    <span>${qm.name}</span>
+                                                </div>
                                     `;
 
-                                    qm.quantity_sub_criterias.forEach((qs, qsIdx) => {
-                                        const subNo = `${qmIdx + 1}.${qsIdx + 1}`; // 1.1, 1.2, ...
+                                    // -------- ตารางเกณฑ์ย่อยเชิงปริมาณ  quantity_sub_criterias[*]-------
+                                    if (qm.quantity_sub_criterias && qm.quantity_sub_criterias.length > 0) {
                                         html += `
-                                                <tr>
-                                                    <td class="px-3 py-2 text-left font-normal text-black text-base border border-gray-300">
-                                                        <span class="mr-2 text-black">${subNo}</span>${qs.name}
-                                                    </td>
-                                                    <td class="px-3 py-2 text-center font-normal text-black text-base border border-gray-300">
-                                                        ${qs.score_a}
-                                                    </td>
-                                                    <td class="px-3 py-2 text-center font-normal text-black text-base border border-gray-300">
-                                                        ${qs.score_b}
-                                                    </td>
-                                                </tr>
-                                        `;
-                                    });
-
-                                    html += `
-                                                </tbody>
-                                            </table>
-
-                                            <!-- หมายเหตุของเกณฑ์หลักเชิงปริมาณ -->
-                                            <div class="text-base text-black font-medium mt-2">
-                                                หมายเหตุ:
-                                                <div class="ml-4 font-normal text-base">${qm.tooltips}</div>
-                                            </div>
-                                        </div>
-                                    `;
-                                }
-
-                                html += `
-                                        </div> <!-- /space-y-3 -->
-                                    </div>
-                                `; // ปิดกล่องของ qm
-                            });
-
-                            html += `</div>`;
-                        }
-
-                        // ===== เกณฑ์เชิงคุณภาพ (Quality) quality_main_criterias[*] =====
-                        if (ev.quality_main_criterias && ev.quality_main_criterias.length > 0) {
-                            html += `<div class="ml-2 mt-2">
-                                        <!-- ลิสต์ชื่อเกณฑ์หลักเชิงคุณภาพ -->
-                                        <ul class="list-disc ml-6 mt-1 space-y-1">
-                                    `;
-                            ev.quality_main_criterias.forEach(qm => {
-                                html += `<li>
-                                            <!-- ชื่อเกณฑ์หลักเชิงคุณภาพ (qm.name) + tooltips + สัดส่วน (ratio) -->
-                                            <span class="font-semibold text-purple-700">${qm.name}</span>
-                                            <span class="text-xs text-gray-400">[${qm.tooltips}]</span>
-                                            <span class="text-xs text-gray-500">(สัดส่วน: ${qm.ratio})</span>`;
-
-                                // ตารางเกณฑ์ย่อยเชิงคุณภาพ  quality_sub_criterias[*]
-                                if (qm.quality_sub_criterias && qm.quality_sub_criterias.length > 0) {
-                                    html += `<div class="overflow-x-auto mt-2">
-                                                <table class="min-w-[320px] w-full text-sm border border-gray-200 rounded">
-                                                    <thead class="bg-purple-100">
+                                            <div class="overflow-x-auto">
+                                                <table class="min-w-[320px] w-full text-sm border border-gray-300 rounded border-collapse">
+                                                    <thead class="bg-sky-100">
                                                         <tr>
-                                                            <th class="px-3 py-2 text-left font-semibold text-black">ชื่อเกณฑ์ย่อย</th>
-                                                            <th class="px-3 py-2 text-left font-semibold text-black">คะแนน</th>
+                                                            <th class="px-3 py-2 text-center font-semibold text-black text-base border border-gray-300">
+                                                                ชื่อเกณฑ์ย่อย
+                                                            </th>
+                                                            <th class="px-3 py-2 text-center font-semibold text-black text-base border border-gray-300">
+                                                                ค่านํ้ำหนักคะแนน (A)
+                                                            </th>
+                                                            <th class="px-3 py-2 text-center font-semibold text-black text-base border border-gray-300">
+                                                                หน่วยภาระงานมาตรฐาน (B)
+                                                            </th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody>`;
-                                    qm.quality_sub_criterias.forEach(qs => {
-                                        html += `<tr class="even:bg-purple-50">
-                                                    <td class="px-3 py-2 text-black">${qs.name}</td>
-                                                    <td class="px-3 py-2 text-black">${qs.num_score}</td>
-                                                </tr>`;
-                                    });
-                                    html += `</tbody></table></div>`;
-                                }
-                                html += `</li>`;
-                            });
-                            html += `</ul></div>`;
-                        }
-                        html += `</div>`;
-                    });
-                    html += `</div></div>`;
-                }
-                html += `</div>`;
-            });
-        }
+                                                    <tbody>
+                                        `;
+
+                                        qm.quantity_sub_criterias.forEach((qs, qsIdx) => {
+                                            const subNo = `${qmIdx + 1}.${qsIdx + 1}`; // 1.1, 1.2, ...
+                                            html += `
+                                                    <tr>
+                                                        <td class="px-3 py-2 text-left font-normal text-black text-base border border-gray-300">
+                                                            <span class="mr-2 text-black">${subNo}</span>${qs.name}
+                                                        </td>
+                                                        <td class="px-3 py-2 text-center font-normal text-black text-base border border-gray-300">
+                                                            ${qs.score_a}
+                                                        </td>
+                                                        <td class="px-3 py-2 text-center font-normal text-black text-base border border-gray-300">
+                                                            ${qs.score_b}
+                                                        </td>
+                                                    </tr>
+                                            `;
+                                        });
+
+                                        html += `
+                                                    </tbody>
+                                                </table>
+
+                                                <!-- หมายเหตุของเกณฑ์หลักเชิงปริมาณ -->
+                                                <div class="text-base text-black font-medium mt-2">
+                                                    หมายเหตุ:
+                                                    <div class="ml-4 font-normal text-base">${qm.tooltips}</div>
+                                                </div>
+                                            </div>
+                                        `;
+                                    }
+
+                                    html += `
+                                            </div> <!-- /space-y-3 -->
+                                        </div>
+                                    `; // ปิดกล่องของ qm
+                                });
+
+                                html += `</div>`;
+                            }
+
+                            // ===== เกณฑ์เชิงคุณภาพ (Quality) quality_main_criterias[*] =====
+                            if (ev.quality_main_criterias && ev.quality_main_criterias.length > 0) {
+                                html += `<div class="ml-2 mt-2">
+                                            <!-- ลิสต์ชื่อเกณฑ์หลักเชิงคุณภาพ -->
+                                            <ul class="list-disc ml-6 mt-1 space-y-1">
+                                        `;
+                                ev.quality_main_criterias.forEach(qm => {
+                                    html += `<li>
+                                                <!-- ชื่อเกณฑ์หลักเชิงคุณภาพ (qm.name) + tooltips + สัดส่วน (ratio) -->
+                                                <span class="font-semibold text-purple-700">${qm.name}</span>
+                                                <span class="text-xs text-gray-400">[${qm.tooltips}]</span>
+                                                <span class="text-xs text-gray-500">(สัดส่วน: ${qm.ratio})</span>`;
+
+                                    // ตารางเกณฑ์ย่อยเชิงคุณภาพ  quality_sub_criterias[*]
+                                    if (qm.quality_sub_criterias && qm.quality_sub_criterias.length > 0) {
+                                        html += `<div class="overflow-x-auto mt-2">
+                                                    <table class="min-w-[320px] w-full text-sm border border-gray-200 rounded">
+                                                        <thead class="bg-purple-100">
+                                                            <tr>
+                                                                <th class="px-3 py-2 text-left font-semibold text-black">ชื่อเกณฑ์ย่อย</th>
+                                                                <th class="px-3 py-2 text-left font-semibold text-black">คะแนน</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>`;
+                                        qm.quality_sub_criterias.forEach(qs => {
+                                            html += `<tr class="even:bg-purple-50">
+                                                        <td class="px-3 py-2 text-black">${qs.name}</td>
+                                                        <td class="px-3 py-2 text-black">${qs.num_score}</td>
+                                                    </tr>`;
+                                        });
+                                        html += `</tbody></table></div>`;
+                                    }
+                                    html += `</li>`;
+                                });
+                                html += `</ul></div>`;
+                            }
+                            html += `</div>`;
+                        });
+                        html += `</div></div>`;
+                    }
+                    html += `</div>`;
+                });
+            }
 
         // ====== หมายเหตุจากส่วนหัว ======
         if (headerNotes.length > 0) {

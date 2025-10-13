@@ -52,11 +52,26 @@ class ReportStructureController extends Controller
                 ->with([
                     'reportDatas:id,criteria_version_id,report_title,report_description,assessment_type,comment',
                     'categories' => function ($query) {
-                        $query->select('id', 'criteria_version_id', 'main_categories', 'sub_categories', 'sequence')
+                        $query->select(
+                            'id',
+                            'criteria_version_id', 
+                            'main_categories', 
+                            'sub_categories', 
+                            'sub_category_score',
+                            'sequence'
+                            )
                             ->orderBy('sequence');
                     },
                     'categories.evaluationLists' => function ($query) {
-                        $query->select('id', 'categorie_id', 'criteria_version_id', 'name', 'sum_score', 'sequence', 'annotation')
+                        $query->select(
+                            'id',
+                            'categorie_id', 
+                            'criteria_version_id', 
+                            'name', 
+                            'sum_score', 
+                            'sequence', 
+                            'annotation'
+                            )
                             ->orderBy('sequence');
                     },
                     'categories.evaluationLists.quantitySubCriterias' => function ($query) {
@@ -117,6 +132,7 @@ class ReportStructureController extends Controller
                         'categorie_id' => $category->id,
                         'main_categories' => $category->main_categories,
                         'sub_categories' => $category->sub_categories,
+                        'sub_category_score' => (float) $category->sub_category_score,
                         'sequence' => $category->sequence,
                         'evaluation_lists' => $category->evaluationLists->map(function ($evalList) {
                             // สร้าง Map ของ quantity main criterias
@@ -221,6 +237,7 @@ class ReportStructureController extends Controller
             'categories' => 'required|array|min:1',
             'categories.*.main_categories' => 'required|string',
             'categories.*.sub_categories' => 'required|string',
+            'categories.*.sub_category_score' => 'required|numeric|min:0',
             'categories.*.sequence' => 'required|integer|min:1',
 
             'categories.*.evaluation_lists' => 'sometimes|array|min:1',
@@ -275,6 +292,7 @@ class ReportStructureController extends Controller
                         'criteria_version_id' => $version->id,
                         'main_categories' => $categoryData['main_categories'],
                         'sub_categories' => $categoryData['sub_categories'],
+                        'sub_category_score'  => $categoryData['sub_category_score'],
                         'sequence' => $categoryData['sequence'],
                     ]);
 

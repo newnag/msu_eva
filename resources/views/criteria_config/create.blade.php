@@ -543,14 +543,24 @@
             document.querySelectorAll('#categories_container .category_block').forEach((catBlock, catI) => {
                 const mainCategories = catBlock.querySelector('.main_categories').value.trim();
                 const subCategories = catBlock.querySelector('.sub_categories').value.trim();
+
+                const subCategoryScoreStr = catBlock.querySelector('.sub_category_score')?.value ?? '';
+                const subCategoryScore = Number(subCategoryScoreStr);
+
                 if (!mainCategories || !subCategories) {
                     //alert(`กรุณากรอกหมวดหมู่หลักและหมวดหมู่ย่อยสำหรับหมวดหมู่ที่ ${catI + 1}`);
+                    return;
+                }
+
+                if (subCategoryScoreStr === '' || Number.isNaN(subCategoryScore)) {
+                    showValidationErrorModal(`กรุณากรอก "คะแนนรวม" ของหมวดหมู่ย่อย (หมวดที่ ${catI + 1})`);
                     return;
                 }
 
                 let category = {
                     main_categories: mainCategories,
                     sub_categories: subCategories,
+                    sub_category_score: subCategoryScore,
                     sequence: Number(catBlock.querySelector('.category_sequence').textContent),
                     evaluation_lists: []
                 };
