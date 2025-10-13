@@ -109,17 +109,17 @@
                 </div>
 
                 <!-----------------------  Filter Inputs ----------------------->
-                <div class="bg-white rounded-xl shadow-lg py-3 px-6 animate-fadeIn">
+                <div class="bg-white rounded-lg drop-shadow-lg py-3 px-6 animate-fadeIn">
                     <form id="filterForm" method="get" class="space-y-1">
                         <div class="flex flex-col md:flex-row md:items-end md:space-x-4 space-y-3 md:space-y-0">
                             <!-- Department -->
                             <div class="relative">
-                                <label for="department_name" class="block mb-1 text-base text-gray-600 font-medium">
+                                <label for="department_name" class="block mb-2 text-lg text-gray-900 font-medium">
                                     หน่วยงาน/แผนก
                                 </label>
                                 <select id="department_name" name="department_name"
                                     class="appearance-none text-base text-black font-normal bg-white border border-gray-50 rounded-lg 
-                                        focus:ring-blue-500 focus:border-blue-500 px-4 py-2 w-full">
+                                        focus:ring-blue-500 focus:border-blue-500 px-3 py-2 w-full">
                                     <option value="">ทุกหน่วยงาน</option>
                                     @foreach ($departments ?? [] as $dept)
                                     <option value="{{ $dept->department_name }}" 
@@ -130,30 +130,28 @@
                                 </select>
 
                                 <!-- Custom arrow -->
-                                <div class="absolute inset-y-0 right-3 top-6 flex items-center pointer-events-none text-gray-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                                    </svg>
+                                <div class="absolute inset-y-0 right-3 top-8 flex items-center pointer-events-none">
+                                    <x-icon.chevron-down class="h-4 w-4 text-gray-500" />
                                 </div>
                             </div>
 
                             <!-- Start Date -->
                             <div>
-                                <label class="block mb-1 text-base text-gray-600 font-medium">วันที่เริ่มต้น</label>
+                                <label class="block mb-2 text-lg text-gray-900 font-medium">วันที่เริ่มต้น</label>
                                 <input name="start_time" type="date" value="{{ request('start_time', '') }}"
                                     class="text-base text-black font-normal bg-white border border-gray-50 rounded-lg focus:ring-blue-500 focus:border-blue-500 px-4 py-2 w-48" />
                             </div>
 
                             <!-- End Date -->
                             <div>
-                                <label class="block mb-1 text-base text-gray-600 font-medium">วันที่สิ้นสุด</label>
+                                <label class="block mb-2 text-lg text-gray-900 font-medium">วันที่สิ้นสุด</label>
                                 <input name="end_time" type="date" value="{{ request('end_time', '') }}"
                                     class="text-base text-black font-normal bg-white border border-gray-50 rounded-lg focus:ring-blue-500 focus:border-blue-500 px-4 py-2 w-48" />
                             </div>
 
                             <!-- Reset Button -->
                             <div>
-                                <label class="block mb-1 text-base text-gray-600 font-medium invisible">รีเซ็ต</label>
+                                <label class="block mb-1 text-xl text-gray-900 font-medium invisible">รีเซ็ต</label>
                                 <button type="button" onclick="resetFilters()"
                                     class="flex items-center px-4 py-2 rounded-md bg-white border border-gray-50 text-gray-800 hover:bg-gray-300 transition space-x-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -175,7 +173,7 @@
                     <div id="statusCard" class="bg-white rounded-xl shadow-lg p-6 animate-fadeIn"
                         style="animation-delay: 0.4s;">
                         <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-lg font-semibold text-gray-900">สถานะผลการประเมิน</h3>
+                            <h3 class="text-xl font-semibold text-gray-900">สถานะผลการประเมิน</h3>
                             <x-download-menu />
                         </div>
                         <div class="h-80"><canvas id="statusChart"></canvas></div>
@@ -184,7 +182,7 @@
                     <!--- Score Distribution Chart --->
                     <div id="scoreCard" class="bg-white rounded-xl shadow-lg p-6 animate-fadeIn" style="animation-delay: 0.5s;">
                         <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-lg font-semibold text-gray-900">การกระจายตัวของคะแนน</h3>
+                            <h3 class="text-xl font-semibold text-gray-900">การกระจายตัวของคะแนน</h3>
                             <x-download-menu />
                         </div>
                         <div class="h-80"><canvas id="scoreDistributionChart"></canvas></div>
@@ -195,47 +193,49 @@
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden animate-fadeIn" style="animation-delay: 0.6s;">
                     <!-- Table Header with Filters and Export Button -->
                     <div class="px-6 py-4 border-b border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2 sm:mb-0">ผลการประเมินรายบุคคล</h3>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2 sm:mb-0">ผลการประเมินรายบุคคล</h3>
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                            <!-- Left: Status Filter -->
+                            <div class="relative w-full sm:w-44">
+                                <select id="statusFilter"
+                                    class="appearance-none bg-white text-black text-base w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    <option value="">สถานะทั้งหมด</option>
+                                    <option value="Assigned">มอบหมายแล้ว</option>
+                                    <option value="Draft">ฉบับร่าง</option>
+                                    <option value="Pending">รอดำเนินการ</option>
+                                    <option value="Completed">เสร็จสิ้น</option>
+                                </select>
 
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                        <!-- Left: Status Filter -->
-                        <div>
-                        <select id="statusFilter"
-                            class="text-black text-base w-full sm:w-44 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            <option value="">สถานะทั้งหมด</option>
-                            <option value="Assigned">มอบหมายแล้ว</option>
-                            <option value="Draft">ฉบับร่าง</option>
-                            <option value="Pending">รอดำเนินการ</option>
-                            <option value="Completed">เสร็จสิ้น</option>
-                        </select>
-                        </div>
+                                <!-- icon -->
+                                <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                                    <x-icon.chevron-down class="h-4 w-4 text-gray-500" />
+                                </div>
+                            </div>
 
-                        <!-- Right: Search + Export -->
-                        <div class="mt-3 sm:mt-0 flex flex-col sm:flex-row sm:items-center gap-3 sm:ml-auto">
-                        <!-- Search bar -->
-                        <div class="relative">
-                            <input type="text" id="searchInput" placeholder="ค้นหาชื่อผู้รับการประเมิน"
-                            class="text-black text-base w-full sm:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                            <!-- Right: Search + Export -->
+                            <div class="mt-3 sm:mt-0 flex flex-col sm:flex-row sm:items-center gap-3 sm:ml-auto">
+                            <!-- Search bar -->
+                            <div class="relative">
+                                <input type="text" id="searchInput" placeholder="ค้นหาชื่อผู้รับการประเมิน"
+                                class="text-black text-base w-full sm:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <x-icon.search class="h-5 w-5 text-gray-400" />
+                                </div>
+                            </div>
+
+                            <!-- Export to Excel Button -->
+                            <button onclick="exportToExcel()"
+                                class="inline-flex items-center px-3 py-2 border border-transparent text-base rounded-lg text-white bg-blue-700 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
+                                    d="M12 10v6m0 0l-3-3m3 3l3-3 m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                </path>
+                                </svg>
+                                ส่งออกเป็น Excel
+                            </button>
                             </div>
                         </div>
-
-                        <!-- Export to Excel Button -->
-                        <button onclick="exportToExcel()"
-                            class="inline-flex items-center px-3 py-2 border border-transparent text-base rounded-lg text-white bg-blue-700 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 10v6m0 0l-3-3m3 3l3-3 m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                            </path>
-                            </svg>
-                            ส่งออกเป็น Excel
-                        </button>
-                        </div>
-                    </div>
                     </div>
 
                     <!-- Table -->
@@ -295,6 +295,7 @@
                                         </td>
                                         <td class="px-6 py-2 whitespace-nowrap"> {{ $evaluatee_name }}</td>
                                         <td class="px-6 py-2 whitespace-nowrap"> {{ $evaluator_name }} </td>
+                                         <!-- คะแนน -->
                                         <td class="px-6 py-2 whitespace-nowrap">{{ $score }}</td>
                                         <!-- สถานะ -->
                                         <td class="px-6 py-2 whitespace-nowrap">
@@ -307,6 +308,7 @@
                                             <x-button 
                                                 type="outline-primary" 
                                                 text="ดูรายละเอียด" 
+                                                icon="far fa-eye fa-sm"
                                                 :onclick="'openReportDetails(' . $report['report_id'] . ')'" 
                                             />
                                         </td>
